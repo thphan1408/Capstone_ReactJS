@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, TextField } from '@mui/material'
+import { Box, Button, Grid, Stack, TextField } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -51,8 +51,12 @@ const SignIn = () => {
   }
 
   return (
-    <>
-      SignIn
+    <Box
+      sx={{
+        my: 10,
+        width: 'auto',
+      }}
+    >
       <Grid
         container
         justifyContent={'center'}
@@ -86,7 +90,7 @@ const SignIn = () => {
           </form>
         </Grid>
       </Grid>
-    </>
+    </Box>
   )
 }
 
