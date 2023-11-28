@@ -43,12 +43,12 @@ const Banner = () => {
       <Slider {...settings}>
         {data.map((item) => {
           return (
-            <Box key={item.maBanner} sx={{ height: 500 }}>
+            <Box key={item.maBanner}>
               <img
                 src={item.hinhAnh}
                 alt={item.maPhim}
                 width="100%"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'contain' }}
               />
             </Box>
           )

@@ -19,11 +19,11 @@ function App() {
           <Route path={PATH.HOME} element={<MovieLayout />}>
             <Route index element={<HomeModule />} />
             <Route path="movie/:movieID" element={<Details />} />
+          <Route path={PATH.SIGN_IN} element={<SignIn />} />
+          <Route path={PATH.SIGN_UP} element={<SignUp />} />
           </Route>
 
           {/* <Route path="prevent-re-render" element={<Memo />} /> */}
-          <Route path={PATH.SIGN_IN} element={<SignIn />} />
-          <Route path={PATH.SIGN_UP} element={<SignUp />} />
 
           <Route path={PATH.ADMIN} element={<AdminLayout />}>
             <Route index element={<AddMovie />} />
