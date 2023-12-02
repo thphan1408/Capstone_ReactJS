@@ -19,6 +19,8 @@ import dayjs from 'dayjs'
 import Swal from 'sweetalert2'
 
 const Cinema = () => {
+  const navigate = useNavigate()
+
   const [movie, setMovie] = useState('')
   const [cinema, setCinema] = useState('')
   const [date, setDate] = useState('')
@@ -71,6 +73,9 @@ const Cinema = () => {
         text: 'Vui lòng chọn ngày giờ chiếu',
         confirmButtonText: 'Đã hiểu',
       })
+    }
+    else{
+      navigate(`ticket/`)
     }
   }
 
