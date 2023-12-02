@@ -42,16 +42,14 @@ const Banner = () => {
     <Carousel>
       {data.map((item) => {
         return (
-          <Box key={item.maBanner}>
-            <img
-              src={item.hinhAnh}
-              alt={item.maPhim}
-              style={{
-                height: 'auto',
-                minWidth: '100%',
-                objectFit: 'cover',
-              }}
-            />
+          <Box
+            key={item.maBanner}
+            style={{
+              minHeight: '400px',
+              objectFit: 'cover',
+            }}
+          >
+            <img src={item.hinhAnh} style={{width: '100%'}} alt={item.maPhim} />
           </Box>
         )
       })}

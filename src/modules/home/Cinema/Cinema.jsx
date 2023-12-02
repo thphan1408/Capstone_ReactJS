@@ -73,9 +73,8 @@ const Cinema = () => {
         text: 'Vui lòng chọn ngày giờ chiếu',
         confirmButtonText: 'Đã hiểu',
       })
-    }
-    else{
-      navigate(`ticket/`)
+    } else {
+      navigate(`ticket/${movie}`)
     }
   }
 
