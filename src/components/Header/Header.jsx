@@ -148,8 +148,8 @@ const Header = () => {
                     textAlign: 'justify',
                   }}
                 >
-                  <Link> Phim đang chiếu</Link>
-                  <Link> Phim sắp chiếu</Link>
+                  <Link> Lịch chiếu phim</Link>
+                  <Link> Cụm rạp</Link>
                   <Link> Về chúng tôi</Link>
                 </Box>
               </MenuItem>
@@ -199,8 +199,8 @@ const Header = () => {
                 color: 'rgb(2, 132, 199)',
               }}
             >
-              <Link> Phim đang chiếu</Link>
-              <Link> Phim sắp chiếu</Link>
+              <Link> Lịch chiếu phim</Link>
+              <Link> Cụm rạp</Link>
               <Link> Về chúng tôi</Link>
             </Stack>
           </Box>

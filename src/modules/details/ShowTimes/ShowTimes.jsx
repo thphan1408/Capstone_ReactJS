@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
 import { getMovieShowTimes } from '../../../apis/cinemaAPI'
-import { Box, Button, Stack, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Button, Container, Stack, Tab, Tabs, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 
 function TabPanel(props) {
@@ -58,71 +58,73 @@ const ShowTimes = ({ movieID }) => {
   }, [cinemaSystems])
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        bgcolor: 'background.paper',
-        display: 'flex',
-      }}
-    >
-      <Tabs
-        orientation="vertical"
-        value={value}
-        variant="scrollable"
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.paper',
+          display: 'flex',
+        }}
       >
+        <Tabs
+          orientation="vertical"
+          value={value}
+          variant="scrollable"
+          aria-label="Vertical tabs example"
+          sx={{ borderRight: 1, borderColor: 'divider' }}
+        >
+          {cinemaSystems.map((item) => {
+            return (
+              <Tab
+                value={value}
+                onClick={() => handleChange(item.maHeThongRap)}
+                label={<img src={item.logo} alt="..." style={{ width: 45 }} />}
+                {...a11yProps(item.maHeThongRap)}
+                key={item.maHeThongRap}
+              />
+            )
+          })}
+        </Tabs>
         {cinemaSystems.map((item) => {
           return (
-            <Tab
+            <TabPanel
               value={value}
-              onClick={() => handleChange(item.maHeThongRap)}
-              label={<img src={item.logo} alt="..." style={{ width: 45 }} />}
-              {...a11yProps(item.maHeThongRap)}
+              index={item.maHeThongRap}
               key={item.maHeThongRap}
-            />
-          )
-        })}
-      </Tabs>
-      {cinemaSystems.map((item) => {
-        return (
-          <TabPanel
-            value={value}
-            index={item.maHeThongRap}
-            key={item.maHeThongRap}
-          >
-            {/*
+            >
+              {/*
               display: flex
               flex-direction: column
               gap: 3 
             */}
-            {/* <Stack direction="column" spacing={2}> */}
-            {item.cumRapChieu.map((rap) => {
-              return (
-                <Box sx={{ mb: 3 }} key={rap.maCumRap}>
-                  <Typography component="h4">{rap.tenCumRap}</Typography>
-                  <Stack spacing={2} direction={'row'}>
-                    {rap.lichChieuPhim.map((lichChieu) => {
-                      // const date = new Date(lichChieu.ngayChieuGioChieu)
-                      // const times = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()} ~ ${date.getHours()} - ${date.getMinutes()}` // dd/mm/yyyy ~ hh-mm
-                      const times = dayjs(lichChieu.ngayChieuGioChieu).format(
-                        'DD/MM/YYYY ~ HH:mm'
-                      )
-                      return (
-                        <Box key={lichChieu.maLichChieu}>
-                          <Button variant="outlined">{times}</Button>
-                        </Box>
-                      )
-                    })}
-                  </Stack>
-                </Box>
-              )
-            })}
-            {/* </Stack> */}
-          </TabPanel>
-        )
-      })}
-    </Box>
+              {/* <Stack direction="column" spacing={2}> */}
+              {item.cumRapChieu.map((rap) => {
+                return (
+                  <Box sx={{ mb: 3 }} key={rap.maCumRap}>
+                    <Typography component="h4">{rap.tenCumRap}</Typography>
+                    <Stack spacing={2} direction={'row'}>
+                      {rap.lichChieuPhim.map((lichChieu) => {
+                        // const date = new Date(lichChieu.ngayChieuGioChieu)
+                        // const times = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()} ~ ${date.getHours()} - ${date.getMinutes()}` // dd/mm/yyyy ~ hh-mm
+                        const times = dayjs(lichChieu.ngayChieuGioChieu).format(
+                          'DD/MM/YYYY ~ HH:mm'
+                        )
+                        return (
+                          <Box key={lichChieu.maLichChieu}>
+                            <Button variant="outlined">{times}</Button>
+                          </Box>
+                        )
+                      })}
+                    </Stack>
+                  </Box>
+                )
+              })}
+              {/* </Stack> */}
+            </TabPanel>
+          )
+        })}
+      </Box>
+    </Container>
   )
 }
 
