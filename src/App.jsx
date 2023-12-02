@@ -10,6 +10,8 @@ import { UserProvider } from './contexts/UserContext/UserContext'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import AddMovie from './modules/admin/MovieManagement/AddMovie'
 import Memo from './modules/renders/Memo'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 
 function App() {
   return (
@@ -19,8 +21,8 @@ function App() {
           <Route path={PATH.HOME} element={<MovieLayout />}>
             <Route index element={<HomeModule />} />
             <Route path="movie/:movieID" element={<Details />} />
-          <Route path={PATH.SIGN_IN} element={<SignIn />} />
-          <Route path={PATH.SIGN_UP} element={<SignUp />} />
+            <Route path={PATH.SIGN_IN} element={<SignIn />} />
+            <Route path={PATH.SIGN_UP} element={<SignUp />} />
           </Route>
 
           {/* <Route path="prevent-re-render" element={<Memo />} /> */}
