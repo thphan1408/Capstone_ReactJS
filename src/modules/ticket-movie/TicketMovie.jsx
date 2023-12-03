@@ -13,6 +13,7 @@ const TicketMovie = () => {
     queryKey: ['get-chair-showtimes', showtimesID],
     queryFn: () => getChair(showtimesID),
     enabled: !!showtimesID,
+    
   })
   console.log('🚀  ticketMovie:', ticketMovie)
 
