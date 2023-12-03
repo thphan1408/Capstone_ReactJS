@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import cn from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { MovieBookingActions } from '../../../../store/slice'
@@ -20,6 +20,7 @@ const Chair = ({ ghe }) => {
   const isChairBooked = chairsBooking.some((chair) => chair.maGhe === ghe.maGhe)
 
   const { tenGhe, maGhe, loaiGhe, taiKhoanNguoiDat, giaVe } = ghe
+
   return (
     <button
       onClick={() => handleChair(maGhe, tenGhe, giaVe)}
