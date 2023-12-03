@@ -1,10 +1,8 @@
 import React from 'react'
 import Chair from './Chair'
-import { getChair } from '../../../apis/ticketAPI'
 import { useQuery } from '@tanstack/react-query'
 import { Container, Box } from '@mui/material'
 const ListChair = ({ chair }) => {
-  console.log('chair: ', chair)
   return (
     <div>
       <Box
