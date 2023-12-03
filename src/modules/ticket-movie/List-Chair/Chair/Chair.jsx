@@ -11,7 +11,7 @@ const Chair = ({ ghe }) => {
       }}
       disabled={taiKhoanNguoiDat !== null}
       className={cn('Chair', {
-        manualChair: loaiGhe === 'Thuong',
+        regularChair: loaiGhe === 'Thuong',
         vipChair: loaiGhe === 'Vip',
         booked: taiKhoanNguoiDat !== null,
         booking: taiKhoanNguoiDat === null,
