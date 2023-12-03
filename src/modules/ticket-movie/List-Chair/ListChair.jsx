@@ -3,15 +3,8 @@ import Chair from './Chair'
 import { getChair } from '../../../apis/ticketAPI'
 import { useQuery } from '@tanstack/react-query'
 import { Container, Box } from '@mui/material'
-const ListChair = ({ showtimesID }) => {
-  console.log('showtimesID: ', showtimesID)
-  const { data: chair, isLoading: isLoadingShowtimes } = useQuery({
-    queryKey: ['get-chair-showtimes', showtimesID],
-    queryFn: () => getChair(showtimesID),
-    enabled: !!showtimesID,
-  })
+const ListChair = ({ chair }) => {
   console.log('chair: ', chair)
-
   return (
     <div>
       <Box
@@ -23,7 +16,7 @@ const ListChair = ({ showtimesID }) => {
         }}
       >
         {chair &&
-          chair.danhSachGhe.map((ghe) => {
+          chair.map((ghe) => {
             return <Chair ghe={ghe} />
           })}
       </Box>
@@ -52,7 +45,7 @@ const ListChair = ({ showtimesID }) => {
             alignItems: 'center',
           }}
         >
-          <Box className="Chair manualChair"></Box>Thường{' '}
+          <Box className="Chair regularChair"></Box>Thường{' '}
         </Box>
 
         <Box
