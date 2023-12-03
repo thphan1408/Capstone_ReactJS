@@ -43,7 +43,7 @@ const ListChair = ({ chair }) => {
             alignItems: 'center',
           }}
         >
-          <Box className="Chair manualChair"></Box>Thường{' '}
+          <Box className="Chair regularChair"></Box>Thường{' '}
         </Box>
 
         <Box
