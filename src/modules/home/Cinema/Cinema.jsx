@@ -74,7 +74,7 @@ const Cinema = () => {
         confirmButtonText: 'Đã hiểu',
       })
     } else {
-      navigate(`ticket/${movie}`)
+      navigate(`ticket/:${date}`)
     }
   }
 
