@@ -36,9 +36,17 @@ export const MovieBookingSlice = createSlice({
         state.chairsBooking.splice(index, 1)
       }
     },
-    payment: (state, { payload }) => {
-      console.log('payload: ', payload)
+
+    resetChairBooking: (state, { payload }) => {
+      return {
+        ...state,
+        chairsBooking: [],
+      }
     },
+
+    // payment: (state, { payload }) => {
+    //   console.log('payload: ', payload)
+    // },
   },
 })
 
