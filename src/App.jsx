@@ -24,7 +24,7 @@ function App() {
             <Route path="movie/:movieID" element={<Details />} />
             <Route path={PATH.SIGN_IN} element={<SignIn />} />
             <Route path={PATH.SIGN_UP} element={<SignUp />} />
-            <Route path="ticket/:movieID" element={<TicketMovie/>}/>
+            <Route path="ticket/:movieID" element={<TicketMovie />} />
           </Route>
 
           {/* <Route path="prevent-re-render" element={<Memo />} /> */}

@@ -41,6 +41,7 @@ const Cinema = () => {
   })
 
   const cinemaSystems = showtimes?.heThongRapChieu || []
+  console.log('🚀  cinemaSystems:', cinemaSystems)
 
   const handleChangeMovie = (newMovie) => {
     setMovie(newMovie)
@@ -74,7 +75,7 @@ const Cinema = () => {
         confirmButtonText: 'Đã hiểu',
       })
     } else {
-      navigate(`ticket/${movie}`)
+      navigate(`ticket/${date}`)
     }
   }
 
