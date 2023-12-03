@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { current } from 'immer'
 import React from 'react'
-import { useSelector } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { MovieBookingActions } from '../../../store/slice'
+import { Button } from '@mui/material'
 const DetailTicket = ({ detailMovie }) => {
   // console.log('🚀  detailMovie:', detailMovie)
   const { chairsBooking } = useSelector((state) => state.MovieBooking)
@@ -21,7 +22,12 @@ const DetailTicket = ({ detailMovie }) => {
       <table border="1">
         <thead></thead>
         <tbody>
-          <tr>{totalPriceTicket.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</tr>
+          <tr>
+            {totalPriceTicket.toLocaleString('it-IT', {
+              style: 'currency',
+              currency: 'VND',
+            })}
+          </tr>
           <tr>
             <td>Cụm Rạp:</td>
             <td>{detailMovie?.tenCumRap}</td>
@@ -46,12 +52,16 @@ const DetailTicket = ({ detailMovie }) => {
             <td>Chọn:</td>
             <td>
               {chairsBooking.map((ghe) => {
-                return ghe.tenGhe + ", "
+                return ghe.tenGhe + ', '
               })}
             </td>
           </tr>
           <tr>
-            <td colSpan={2}></td>
+            <td colSpan={2}>
+              <Button type="button" variant="contained" fullWidth>
+                Đặt vé
+              </Button>
+            </td>
           </tr>
         </tbody>
       </table>

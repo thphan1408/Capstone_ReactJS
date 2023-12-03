@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import cn from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { MovieBookingActions } from '../../../../store/slice'
+import { useParams } from 'react-router-dom'
 
 const Chair = ({ ghe }) => {
   const { chairsBooking } = useSelector((state) => state.MovieBooking)
@@ -17,6 +18,7 @@ const Chair = ({ ghe }) => {
       })
     )
   }
+  // dispatch(MovieBookingActions.resetChairBooking())
   const isChairBooked = chairsBooking.some((chair) => chair.maGhe === ghe.maGhe)
 
   const { tenGhe, maGhe, loaiGhe, taiKhoanNguoiDat, giaVe } = ghe

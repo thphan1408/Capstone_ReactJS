@@ -1,10 +1,10 @@
 import React from 'react'
 import Chair from './Chair'
 import { useQuery } from '@tanstack/react-query'
-import { Container, Box } from '@mui/material'
+import { Container, Box, Typography } from '@mui/material'
 const ListChair = ({ chair }) => {
   return (
-    <div>
+    <Box>
       <Box
         sx={{
           display: 'grid',
@@ -15,7 +15,7 @@ const ListChair = ({ chair }) => {
       >
         {chair &&
           chair.map((ghe) => {
-            return <Chair ghe={ghe} />
+            return <Chair ghe={ghe} key={ghe.maGhe} />
           })}
       </Box>
       <Box
@@ -56,7 +56,7 @@ const ListChair = ({ chair }) => {
           <Box className="Chair vipChair"></Box>Vip{' '}
         </Box>
       </Box>
-    </div>
+    </Box>
   )
 }
 
