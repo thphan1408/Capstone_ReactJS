@@ -1,14 +1,27 @@
 import { useQuery } from '@tanstack/react-query'
+import { current } from 'immer'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 const DetailTicket = ({ detailMovie }) => {
   // console.log('🚀  detailMovie:', detailMovie)
+  const { chairsBooking } = useSelector((state) => state.MovieBooking)
+  console.log('🚀  chairsBooking:', chairsBooking)
+
+  let totalPriceTicket = 0
+
+  if (chairsBooking.length) {
+    chairsBooking.map((gia) => {
+      return (totalPriceTicket += gia.giaVe)
+    })
+  }
+
   return (
     <div>
       <table border="1">
         <thead></thead>
         <tbody>
-          <tr>0VND</tr>
+          <tr>{totalPriceTicket.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</tr>
           <tr>
             <td>Cụm Rạp:</td>
             <td>{detailMovie?.tenCumRap}</td>
@@ -31,7 +44,11 @@ const DetailTicket = ({ detailMovie }) => {
           </tr>
           <tr>
             <td>Chọn:</td>
-            <td></td>
+            <td>
+              {chairsBooking.map((ghe) => {
+                return ghe.tenGhe + ", "
+              })}
+            </td>
           </tr>
           <tr>
             <td colSpan={2}></td>
