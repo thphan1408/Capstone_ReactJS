@@ -1,17 +1,8 @@
 import React from 'react'
 import Chair from './Chair'
-import { getChair } from '../../../apis/ticketAPI'
 import { useQuery } from '@tanstack/react-query'
 import { Container, Box } from '@mui/material'
-const ListChair = ({ showtimesID }) => {
-  console.log('showtimesID: ', showtimesID)
-  const { data: chair, isLoading: isLoadingShowtimes } = useQuery({
-    queryKey: ['get-chair-showtimes', showtimesID],
-    queryFn: () => getChair(showtimesID),
-    enabled: !!showtimesID,
-  })
-  console.log('chair: ', chair)
-
+const ListChair = ({ chair }) => {
   return (
     <div>
       <Box
@@ -23,7 +14,7 @@ const ListChair = ({ showtimesID }) => {
         }}
       >
         {chair &&
-          chair.danhSachGhe.map((ghe) => {
+          chair.map((ghe) => {
             return <Chair ghe={ghe} />
           })}
       </Box>

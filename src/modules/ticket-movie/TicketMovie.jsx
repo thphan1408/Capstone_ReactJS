@@ -3,6 +3,9 @@ import ListChair from './List-Chair/ListChair'
 import DetailTicket from './Detail-Ticket/DetailTicket'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { getChair } from '../../apis/ticketAPI'
+
+
 const TicketMovie = () => {
   const { showtimesID } = useParams()
 
@@ -15,8 +18,8 @@ const TicketMovie = () => {
 
   return (
     <div style={{ display: 'flex', margin: '10px 0' }}>
-      {/* <ListChair chair={ticketMovie.danhSachGhe} />
-      <DetailTicket detailMovie={ticketMovie.thongTinPhim} /> */}
+      <ListChair chair={ticketMovie?.danhSachGhe} />
+      <DetailTicket detailMovie={ticketMovie?.thongTinPhim} />
     </div>
   )
 }
