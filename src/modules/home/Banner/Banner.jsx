@@ -49,7 +49,11 @@ const Banner = () => {
               objectFit: 'cover',
             }}
           >
-            <img src={item.hinhAnh} style={{width: '100%'}} alt={item.maPhim} />
+            <img
+              src={item.hinhAnh}
+              style={{ width: '100%' }}
+              alt={item.maPhim}
+            />
           </Box>
         )
       })}

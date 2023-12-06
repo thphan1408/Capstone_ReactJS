@@ -15,6 +15,7 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false, // default: true
       // Khi mà user nhấn chuột qua tab khác rồi trở lại tab ứng dụng thì mặc định sẽ call lại api
+      retry: true,
     },
   },
 })
@@ -24,6 +25,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <App />
     </Provider>
-    <ReactQueryDevtools initialIsOpen={true} />
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 )

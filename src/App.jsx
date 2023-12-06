@@ -13,6 +13,7 @@ import Memo from './modules/renders/Memo'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import TicketMovie from './modules/ticket-movie/TicketMovie'
+import HistoryTicket from './modules/history-ticket/HistoryTicket'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path={PATH.SIGN_IN} element={<SignIn />} />
             <Route path={PATH.SIGN_UP} element={<SignUp />} />
             <Route path="ticket/:showtimesID" element={<TicketMovie />} />
+            <Route path={PATH.HISTORY_TICKET} element={<HistoryTicket />} />
           </Route>
 
           {/* <Route path="prevent-re-render" element={<Memo />} /> */}

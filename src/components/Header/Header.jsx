@@ -207,14 +207,14 @@ const Header = () => {
 
           {currentUser ? (
             <Stack direction={'row'} spacing={2} alignItems={'center'}>
-              <Typography>{currentUser.hoTen}</Typography>
-
+              {/* <Typography>{currentUser.hoTen}</Typography> */}
+              <Link to={PATH.HISTORY_TICKET}>{currentUser.hoTen}</Link>
               <Button
                 size="small"
                 variant="contained"
                 onClick={() => {
                   handleLogout()
-                  navigate(PATH.SIGN_IN)
+                  navigate(PATH.HOME)
                 }}
               >
                 Đăng xuất
