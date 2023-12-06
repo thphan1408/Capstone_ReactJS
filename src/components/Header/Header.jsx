@@ -6,7 +6,10 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import AdbIcon from '@mui/icons-material/Adb'
+import { infoUserAPI } from '../../apis/userAPI'
 import MenuIcon from '@mui/icons-material/Menu'
+import { LoadingButton } from '@mui/lab'
+
 import {
   Stack,
   Container,
@@ -17,13 +20,18 @@ import {
 } from '@mui/material'
 import { useNavigate, Link } from 'react-router-dom'
 import { PATH } from '../../routes/path'
-import { useAuth } from '../../contexts/UserContext/UserContext'
+import {
+  useAuth,
+  useHistoryTicket,
+} from '../../contexts/UserContext/UserContext'
+import { useMutation } from '@tanstack/react-query'
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 const Header = () => {
   const navigate = useNavigate()
   const { currentUser, handleLogout } = useAuth()
+  const { setValuesData } = useHistoryTicket()
 
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -41,6 +49,21 @@ const Header = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const { mutate: handleInfoUser, isPending } = useMutation({
+    mutationFn: (payload) => infoUserAPI(payload),
+    onSuccess: (values) => {
+      navigate(PATH.HISTORY_TICKET)
+      setValuesData(values)
+    },
+    onError: (error) => {
+      console.log('🚀  error:', error)
+    },
+  })
+
+  const handleHistory = () => {
+    handleInfoUser()
   }
 
   return (
@@ -207,8 +230,12 @@ const Header = () => {
 
           {currentUser ? (
             <Stack direction={'row'} spacing={2} alignItems={'center'}>
-              {/* <Typography>{currentUser.hoTen}</Typography> */}
-              <Link to={PATH.HISTORY_TICKET}>{currentUser.hoTen}</Link>
+              <LoadingButton loading={isPending} onClick={handleHistory}>
+                {currentUser.hoTen}
+              </LoadingButton>
+              {/* <Link to={PATH.HISTORY_TICKET} >
+                {currentUser.hoTen}
+              </Link> */}
               <Button
                 size="small"
                 variant="contained"
