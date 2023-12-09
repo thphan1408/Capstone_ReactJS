@@ -6,40 +6,37 @@ import Details from './modules/details'
 import { PATH } from './routes/path'
 import SignIn from './modules/auth/Signin/SignIn'
 import SignUp from './modules/auth/Signup/SignUp'
-import {
-  UserProvider,
-} from './contexts/UserContext/UserContext'
-import AdminLayout from './layouts/AdminLayout/AdminLayout'
+import { UserProvider } from './contexts/UserContext/UserContext'
 import AddMovie from './modules/admin/MovieManagement/AddMovie'
 import Memo from './modules/renders/Memo'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import TicketMovie from './modules/ticket-movie/TicketMovie'
 import HistoryTicket from './modules/history-ticket/HistoryTicket'
-
+import AdminPage from './layouts/AdminLayout/App.jsx'
 function App() {
   return (
     <UserProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path={PATH.HOME} element={<MovieLayout />}>
-              <Route index element={<HomeModule />} />
-              <Route path="movie/:movieID" element={<Details />} />
-              <Route path={PATH.SIGN_IN} element={<SignIn />} />
-              <Route path={PATH.SIGN_UP} element={<SignUp />} />
-              <Route path="ticket/:showtimesID" element={<TicketMovie />} />
-              <Route path={PATH.HISTORY_TICKET} element={<HistoryTicket />} />
-            </Route>
+      <BrowserRouter>
+        <Routes>
+          <Route path={PATH.HOME} element={<MovieLayout />}>
+            <Route index element={<HomeModule />} />
+            <Route path="movie/:movieID" element={<Details />} />
+            <Route path={PATH.SIGN_IN} element={<SignIn />} />
+            <Route path={PATH.SIGN_UP} element={<SignUp />} />
+            <Route path="ticket/:showtimesID" element={<TicketMovie />} />
+            <Route path={PATH.HISTORY_TICKET} element={<HistoryTicket />} />
+          </Route>
 
-            {/* <Route path="prevent-re-render" element={<Memo />} /> */}
+          {/* <Route path="prevent-re-render" element={<Memo />} /> */}
 
-            <Route path={PATH.ADMIN} element={<AdminLayout />}>
-              <Route index element={<AddMovie />} />
-            </Route>
+          <Route path={PATH.ADMIN} element={<AdminPage />}>
+            {/* <Route index element={<AddMovie />} /> */}
+          </Route>
 
-            <Route path="*" element={<NotFound />}></Route>
-          </Routes>
-        </BrowserRouter>
+          <Route path="*" element={<NotFound />}></Route>
+        </Routes>
+      </BrowserRouter>
     </UserProvider>
   )
 }
