@@ -78,7 +78,6 @@ const AddMovie = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
-        <Typography component={'h2'}>AddMovie</Typography>
         <Grid
           container
           justifyContent={'center'}

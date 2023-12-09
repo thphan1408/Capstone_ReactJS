@@ -10,8 +10,6 @@ export const MovieBookingSlice = createSlice({
   initialState,
   reducers: {
     setChairsBooking: (state, { payload }) => {
-      console.log('payload: ', payload)
-      // console.log('action: ', action)
       const index = state.chairsBooking.findIndex(
         (value) => value.maGhe === payload.maGhe
       )
@@ -24,10 +22,12 @@ export const MovieBookingSlice = createSlice({
         state.chairsBooking = [...state.chairsBooking, payload]
       }
     },
+    
     setChairsBooked: (state, { payload }) => {
       state.chairsBooked = [...state.chairsBooked, ...state.chairsBooking]
       state.chairsBooking = []
     },
+
     removeChairBooked: (state, { payload }) => {
       const index = state.chairsBooking.findIndex(
         (value) => value.soGhe === payload.soGhe
@@ -36,9 +36,17 @@ export const MovieBookingSlice = createSlice({
         state.chairsBooking.splice(index, 1)
       }
     },
-    payment: (state, { payload }) => {
-      console.log('payload: ', payload)
+
+    resetChairBooking: (state, { payload }) => {
+      return {
+        ...state,
+        chairsBooking: [],
+      }
     },
+
+    // payment: (state, { payload }) => {
+    //   console.log('payload: ', payload)
+    // },
   },
 })
 

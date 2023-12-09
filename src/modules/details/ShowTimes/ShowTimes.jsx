@@ -1,8 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
 import { getMovieShowTimes } from '../../../apis/cinemaAPI'
-import { Box, Button, Container, Stack, Tab, Tabs, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material'
 import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -33,6 +42,7 @@ function a11yProps(index) {
 }
 
 const ShowTimes = ({ movieID }) => {
+  const navigate = useNavigate()
   const [value, setValue] = useState('')
 
   const handleChange = (newValue) => {
@@ -111,7 +121,14 @@ const ShowTimes = ({ movieID }) => {
                         )
                         return (
                           <Box key={lichChieu.maLichChieu}>
-                            <Button variant="outlined">{times}</Button>
+                            <Button
+                              variant="outlined"
+                              onClick={() => {
+                                navigate(`/ticket/${lichChieu.maLichChieu}`)
+                              }}
+                            >
+                              {times}
+                            </Button>
                           </Box>
                         )
                       })}
