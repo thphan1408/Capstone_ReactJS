@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 import { AddBox } from '@mui/icons-material'
 
 const Chair = ({ ghe }) => {
-  console.log('🚀  ghe:', ghe)
+  // console.log('🚀  ghe:', ghe)
   const { tenGhe, maGhe, loaiGhe, taiKhoanNguoiDat, giaVe, daDat } = ghe
   const { chairsBooking } = useSelector((state) => state.MovieBooking)
   const dispatch = useDispatch()

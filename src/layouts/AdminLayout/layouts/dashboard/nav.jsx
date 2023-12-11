@@ -4,28 +4,26 @@ import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Drawer from '@mui/material/Drawer'
-import Button from '@mui/material/Button'
-import Avatar from '@mui/material/Avatar'
 import { alpha } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import ListItemButton from '@mui/material/ListItemButton'
 
 import { usePathname } from '../../routes/hooks'
-import { RouterLink } from '../../routes/components'
+import { RouterLink } from '../../../../routes/components'
 
 import { useResponsive } from '../../hooks/use-responsive'
-
-import { account } from '../../_mock/account'
 
 import Logo from '../../components/logo'
 import Scrollbar from '../../components/scrollbar'
 
 import { NAV } from './config-layout'
 import navConfig from './config-navigation'
+import { useAuth } from '../../../../contexts/UserContext/UserContext'
 
-// ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+  // const pathname = usePathname()
+  const { currentUser, handleLogout } = useAuth()
   const pathname = usePathname()
 
   const upLg = useResponsive('up', 'lg')
@@ -50,14 +48,14 @@ export default function Nav({ openNav, onCloseNav }) {
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL} alt="photoURL" />
-
-      <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
-
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
-        </Typography>
+      <Box
+        sx={{
+          ml: 2,
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="subtitle1">{currentUser.hoTen}</Typography>
       </Box>
     </Box>
   )
@@ -68,39 +66,6 @@ export default function Nav({ openNav, onCloseNav }) {
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
-  )
-
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack
-        alignItems="center"
-        spacing={3}
-        sx={{ pt: 5, borderRadius: 2, position: 'relative' }}
-      >
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
-
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
-          </Typography>
-        </Box>
-
-        <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-          target="_blank"
-          variant="contained"
-          color="inherit"
-        >
-          Upgrade to Pro
-        </Button>
-      </Stack>
-    </Box>
   )
 
   const renderContent = (
@@ -121,8 +86,6 @@ export default function Nav({ openNav, onCloseNav }) {
       {renderMenu}
 
       <Box sx={{ flexGrow: 1 }} />
-
-      {renderUpgrade}
     </Scrollbar>
   )
 
@@ -195,7 +158,7 @@ function NavItem({ item }) {
       }}
     >
       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
-        {item.icon}
+        {/* {item.icon} */}
       </Box>
 
       <Box component="span">{item.title} </Box>

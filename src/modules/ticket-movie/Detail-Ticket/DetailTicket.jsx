@@ -87,57 +87,6 @@ const DetailTicket = (props) => {
 
   return (
     <Box>
-      {/* <table border="1">
-        <thead></thead>
-        <tbody>
-          <tr>
-            {total.toLocaleString('it-IT', {
-              style: 'currency',
-              currency: 'VND',
-            })}
-          </tr>
-          <tr>
-            <td>Cụm Rạp:</td>
-            <td>{detailMovie?.tenCumRap}</td>
-          </tr>
-          <tr>
-            <td>Địa Chỉ:</td>
-            <td>{detailMovie?.diaChi}</td>
-          </tr>
-          <tr>
-            <td>Rạp:</td>
-            <td>{detailMovie?.tenRap}</td>
-          </tr>
-          <tr>
-            <td>Ngày Giờ Chiếu:</td>
-            <td>{detailMovie?.ngayChieu + '-' + detailMovie?.gioChieu}</td>
-          </tr>
-          <tr>
-            <td>Tên Phim:</td>
-            <td>{detailMovie?.tenPhim}</td>
-          </tr>
-          <tr>
-            <td>Chọn:</td>
-            <td>
-              {chairsBooking.map((ghe) => {
-                return ghe.tenGhe + ', '
-              })}
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={2}>
-              <Button
-                type="button"
-                variant="contained"
-                fullWidth
-                onClick={handleDatve}
-              >
-                Đặt vé
-              </Button>
-            </td>
-          </tr>
-        </tbody>
-      </table> */}
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableBody>

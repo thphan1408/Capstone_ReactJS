@@ -41,7 +41,6 @@ const Cinema = () => {
   })
 
   const cinemaSystems = showtimes?.heThongRapChieu || []
-  console.log('🚀  cinemaSystems:', cinemaSystems)
 
   const handleChangeMovie = (newMovie) => {
     setMovie(newMovie)
