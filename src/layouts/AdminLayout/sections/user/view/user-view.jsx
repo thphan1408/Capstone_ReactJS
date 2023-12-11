@@ -21,6 +21,8 @@ import UserTableHead from '../user-table-head'
 import TableEmptyRows from '../table-empty-rows'
 import UserTableToolbar from '../user-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
+import { useQuery } from '@tanstack/react-query'
+import { getListUser } from '../../../../../apis/userAPI'
 
 // ----------------------------------------------------------------------
 
@@ -94,6 +96,12 @@ export default function UserPage() {
 
   const notFound = !dataFiltered.length && !!filterName
 
+  const { data: userList, isLoading } = useQuery({
+    queryKey: ['get-list-user'],
+    queryFn: () => getListUser(),
+    // enabled: !!showtimesID,
+  })
+
   return (
     <Container>
       <Stack
@@ -140,21 +148,23 @@ export default function UserPage() {
                 ]}
               />
               <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      name={row.name}
-                      role={row.role}
-                      status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                    />
-                  ))}
+                {/* {userList.map((user) => {
+                  console.log(user)
+                })} */}
+
+                {dataFiltered.map((row) => (
+                  <UserTableRow
+                    key={row.id}
+                    name={row.name}
+                    role={row.role}
+                    status={row.status}
+                    company={row.company}
+                    avatarUrl={row.avatarUrl}
+                    isVerified={row.isVerified}
+                    selected={selected.indexOf(row.name) !== -1}
+                    handleClick={(event) => handleClick(event, row.name)}
+                  />
+                ))}
 
                 <TableEmptyRows
                   height={77}
