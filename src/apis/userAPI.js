@@ -1,5 +1,13 @@
 import fetcher from './fetcher'
 
+export const getListUser = async () => {
+  try {
+    const response = await fetcher.get('/QuanLyNguoiDung/LayDanhSachNguoiDung')
+    return response.data.content
+  } catch (error) {
+    throw 'Lỗi'
+  }
+}
 export const signupAPI = async (payload) => {
   try {
     // console.log(payload)
@@ -23,9 +31,7 @@ export const signinAPI = async (payload) => {
 
 export const infoUserAPI = async () => {
   try {
-    const response = await fetcher.post(
-      '/QuanLyNguoiDung/ThongTinTaiKhoan',
-    )
+    const response = await fetcher.post('/QuanLyNguoiDung/ThongTinTaiKhoan')
     // console.log("🚀  response:", response)
 
     return response.data.content
