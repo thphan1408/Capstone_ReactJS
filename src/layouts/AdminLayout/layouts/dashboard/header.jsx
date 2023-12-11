@@ -7,14 +7,14 @@ import Toolbar from '@mui/material/Toolbar'
 import { useTheme } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 
-import { bgBlur } from '../../theme/css'
+import { bgBlur } from '../../../../theme/css'
 
 import Iconify from '../../components/iconify'
 import { useResponsive } from '../..//hooks/use-responsive'
 
 import Searchbar from '../../layouts/dashboard/common/searchbar'
 import { NAV, HEADER } from './config-layout'
-
+import AccountPopover from './common/account-popover'
 // ----------------------------------------------------------------------
 
 export default function Header({ onOpenNav }) {
@@ -34,7 +34,9 @@ export default function Header({ onOpenNav }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Stack direction="row" alignItems="center" spacing={1}></Stack>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <AccountPopover />
+      </Stack>
     </>
   )
 

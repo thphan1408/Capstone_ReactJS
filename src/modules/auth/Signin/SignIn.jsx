@@ -1,4 +1,13 @@
-import { Box, Button, Grid, Stack, TextField } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+} from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -6,12 +15,17 @@ import { signinAPI } from '../../../apis/userAPI'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { PATH } from '../../../routes/path'
 import { LoadingButton } from '@mui/lab'
-import { CURRENT_USER } from '../../../constants'
 import { useAuth } from '../../../contexts/UserContext/UserContext'
+import { useState } from 'react'
+import Iconify from '../../../layouts/AdminLayout/components/iconify'
+import { useTheme, alpha } from '@mui/material/styles'
+import { bgGradient } from '../../../theme/css'
 
 const SignIn = () => {
   const { currentUser, handleSignin: handleSigninContext } = useAuth()
+  const theme = useTheme()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
 
   // Trong useForm nhận vào 1 obj, có key là defaultValues
   const { handleSubmit, register } = useForm({
@@ -20,7 +34,6 @@ const SignIn = () => {
       matKhau: '',
     },
   })
-  // console.log('🚀  handleSubmit:', handleSubmit)
 
   const { mutate: handleSignin, isPending } = useMutation({
     mutationFn: (values) => signinAPI(values),
@@ -42,7 +55,6 @@ const SignIn = () => {
   })
 
   const onSubmit = (values) => {
-    // console.log(values)
     handleSignin(values) // {taiKhoan: '', matKhau: ''}
   }
 
@@ -53,8 +65,11 @@ const SignIn = () => {
   return (
     <Box
       sx={{
-        my: 10,
-        width: 'auto',
+        ...bgGradient({
+          color: alpha(theme.palette.background.default, 0.9),
+          imgUrl: '/public/background/overlay_4.jpg',
+        }),
+        height: 1,
       }}
     >
       <Grid
@@ -64,30 +79,66 @@ const SignIn = () => {
         spacing={3}
       >
         <Grid item md={6}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing={3}>
-              <TextField
-                label="Tài khoản"
-                fullWidth
-                name="taiKhoan"
-                {...register('taiKhoan')}
-              />
-              <TextField
+          <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
+            <Card
+              sx={{
+                p: 5,
+                width: 1,
+                mt: 10,
+                maxWidth: 420,
+              }}
+            >
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack spacing={3}>
+                  <TextField
+                    label="Tài khoản"
+                    fullWidth
+                    name="taiKhoan"
+                    {...register('taiKhoan')}
+                  />
+
+                  <TextField
+                    name="matKhau"
+                    label="Mật khẩu"
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            <Iconify
+                              icon={
+                                showPassword
+                                  ? 'eva:eye-fill'
+                                  : 'eva:eye-off-fill'
+                              }
+                            />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    {...register('matKhau')}
+                  />
+                  {/* <TextField
                 label="Mật khẩu"
                 type="password"
                 fullWidth
                 name="matKhau"
-                {...register('matKhau')}
-              />
-              <LoadingButton
-                type="submit"
-                variant="outlined"
-                loading={isPending}
-              >
-                Đăng nhập
-              </LoadingButton>
-            </Stack>
-          </form>
+              /> */}
+                  <LoadingButton
+                    sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
+                    type="submit"
+                    variant="contained"
+                    loading={isPending}
+                  >
+                    Đăng nhập
+                  </LoadingButton>
+                </Stack>
+              </form>
+            </Card>
+          </Stack>
         </Grid>
       </Grid>
     </Box>

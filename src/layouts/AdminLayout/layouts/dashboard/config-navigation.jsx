@@ -12,33 +12,32 @@ const icon = (name) => (
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/',
-    icon: icon('ic_analytics'),
+    path: '/admin',
+    // icon: icon('ic_analytics'),
   },
   {
     title: 'user',
-    path: '/user',
+    path: 'user',
     icon: icon('ic_user'),
   },
   {
-    title: 'product',
-    path: '/products',
-    icon: icon('ic_cart'),
+    title: 'Thêm phim upload hình',
+    path: 'add-movie',
   },
-  {
-    title: 'blog',
-    path: '/blog',
-    icon: icon('ic_blog'),
-  },
-  {
-    title: 'login',
-    path: '/login',
-    icon: icon('ic_lock'),
-  },
+  // {
+  //   title: 'blog',
+  //   path: '/blog',
+  //   icon: icon('ic_blog'),
+  // },
+  // {
+  //   title: 'login',
+  //   path: '/login',
+  //   icon: icon('ic_lock'),
+  // },
   {
     title: 'Not found',
-    path: '/404',
-    icon: icon('ic_disabled'),
+    path: '404',
+    // icon: icon('ic_disabled'),
   },
 ]
 

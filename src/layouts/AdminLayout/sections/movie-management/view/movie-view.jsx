@@ -4,17 +4,18 @@ import Stack from '@mui/material/Stack'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
 import Typography from '@mui/material/Typography'
+import AddMovie from '../AddMovie'
 
-import { products } from '../../../_mock/products'
+// import { products } from '../../../_mock/products'
 
-import ProductCard from '../product-card'
-import ProductSort from '../product-sort'
-import ProductFilters from '../product-filters'
-import ProductCartWidget from '../product-cart-widget'
+// import ProductCard from '../product-card'
+// import ProductSort from '../product-sort'
+// import ProductFilters from '../product-filters'
+// import ProductCartWidget from '../product-cart-widget'
 
 // ----------------------------------------------------------------------
 
-export default function ProductsView() {
+export default function MovieView() {
   const [openFilter, setOpenFilter] = useState(false)
 
   const handleOpenFilter = () => {
@@ -28,10 +29,10 @@ export default function ProductsView() {
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        Thêm phim upload hình
       </Typography>
 
-      <Stack
+      {/* <Stack
         direction="row"
         alignItems="center"
         flexWrap="wrap-reverse"
@@ -47,17 +48,17 @@ export default function ProductsView() {
 
           <ProductSort />
         </Stack>
-      </Stack>
+      </Stack> */}
 
-      <Grid container spacing={3}>
+      {/* <Grid container spacing={3}>
         {products.map((product) => (
           <Grid key={product.id} xs={12} sm={6} md={3}>
             <ProductCard product={product} />
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
 
-      <ProductCartWidget />
+      <AddMovie />
     </Container>
   )
 }

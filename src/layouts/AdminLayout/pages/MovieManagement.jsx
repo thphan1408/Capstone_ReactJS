@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async'
 
-import { NotFoundView } from '../sections/error'
+import { MovieView } from '../sections/movie-management/view'
 
 // ----------------------------------------------------------------------
 
-export default function NotFoundPage() {
+export default function MovieManagement() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found </title>
+        <title> Movie Management </title>
       </Helmet>
 
-      <NotFoundView />
+      <MovieView />
     </>
   )
 }
