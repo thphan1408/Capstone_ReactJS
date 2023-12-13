@@ -63,85 +63,91 @@ const SignIn = () => {
   }
 
   return (
-    <Box
-      sx={{
-        ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/public/background/overlay_4.jpg',
-        }),
-        height: 1,
-      }}
-    >
-      <Grid
-        container
-        justifyContent={'center'}
-        alignItems={'center'}
-        spacing={3}
+    <>
+      <Box
+        sx={{
+          ...bgGradient({
+            color: alpha(theme.palette.background.default, 0.9),
+            imgUrl: 'src/assets/background/overlay_4.jpg',
+          }),
+          height: 1,
+        }}
       >
-        <Grid item md={6}>
-          <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
-            <Card
-              sx={{
-                p: 5,
-                width: 1,
-                mt: 10,
-                maxWidth: 420,
-              }}
+        <Grid
+          container
+          justifyContent={'center'}
+          alignItems={'center'}
+          spacing={3}
+        >
+          <Grid item md={6}>
+            <Stack
+              alignItems="center"
+              justifyContent="center"
+              sx={{ height: 1 }}
             >
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack spacing={3}>
-                  <TextField
-                    label="Tài khoản"
-                    fullWidth
-                    name="taiKhoan"
-                    {...register('taiKhoan')}
-                  />
+              <Card
+                sx={{
+                  p: 5,
+                  width: 1,
+                  mt: 10,
+                  maxWidth: 420,
+                }}
+              >
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Stack spacing={3}>
+                    <TextField
+                      label="Tài khoản"
+                      fullWidth
+                      name="taiKhoan"
+                      {...register('taiKhoan')}
+                    />
 
-                  <TextField
-                    name="matKhau"
-                    label="Mật khẩu"
-                    type={showPassword ? 'text' : 'password'}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                          >
-                            <Iconify
-                              icon={
-                                showPassword
-                                  ? 'eva:eye-fill'
-                                  : 'eva:eye-off-fill'
-                              }
-                            />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    {...register('matKhau')}
-                  />
-                  {/* <TextField
+                    <TextField
+                      name="matKhau"
+                      label="Mật khẩu"
+                      type={showPassword ? 'text' : 'password'}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowPassword(!showPassword)}
+                              edge="end"
+                            >
+                              <Iconify
+                                icon={
+                                  showPassword
+                                    ? 'eva:eye-fill'
+                                    : 'eva:eye-off-fill'
+                                }
+                              />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      {...register('matKhau')}
+                    />
+                    {/* <TextField
                 label="Mật khẩu"
                 type="password"
                 fullWidth
                 name="matKhau"
               /> */}
-                  <LoadingButton
-                    sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-                    type="submit"
-                    variant="contained"
-                    loading={isPending}
-                  >
-                    Đăng nhập
-                  </LoadingButton>
-                </Stack>
-              </form>
-            </Card>
-          </Stack>
+                    <LoadingButton
+                      sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
+                      type="submit"
+                      variant="contained"
+                      loading={isPending}
+                    >
+                      Đăng nhập
+                    </LoadingButton>
+                  </Stack>
+                </form>
+              </Card>
+            </Stack>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   )
 }
 

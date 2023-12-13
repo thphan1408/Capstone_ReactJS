@@ -1,7 +1,9 @@
 import {
+  Box,
   Button,
   Container,
   Grid,
+  Card,
   Stack,
   TextField,
   Typography,
@@ -17,6 +19,9 @@ import { LoadingButton } from '@mui/lab'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { PATH } from '../../../routes/path'
 import { useAuth } from '../../../contexts/UserContext/UserContext'
+import { Helmet } from 'react-helmet-async'
+import { bgGradient } from '../../../theme/css'
+import { useTheme, alpha } from '@mui/material/styles'
 
 const schemaSignup = yup.object({
   taiKhoan: yup
@@ -37,6 +42,8 @@ const schemaSignup = yup.object({
 })
 
 const SignUp = () => {
+  const theme = useTheme()
+
   const { currentUser } = useAuth()
 
   const navigate = useNavigate()
@@ -86,76 +93,106 @@ const SignUp = () => {
     return <Navigate to={PATH.HOME} />
   }
   return (
-    <Container maxWidth="sm">
-      <Typography component={'h2'}>Sign up</Typography>
-      <Grid
-        container
-        spacing={3}
-        justifyContent={'center'}
-        alignItems={'center'}
+    <>
+      {/* <Container maxWidth="sm"> */}
+      <Box
+        sx={{
+          ...bgGradient({
+            color: alpha(theme.palette.background.default, 0.9),
+            imgUrl: 'src/assets/background/overlay_4.jpg',
+          }),
+          height: 1,
+        }}
       >
-        <Grid item lg={8}>
-          <form
-            onSubmit={handleSubmit(
-              // (values) => {onSubmit(values)},
-              onSubmit
-              // (errors) => {}
-            )}
-          >
-            <Stack spacing={3}>
-              <TextField
-                label="Họ tên"
-                fullWidth
-                error={Boolean(errors.hoTen)}
-                helperText={Boolean(errors.hoTen) && errors.hoTen.message}
-                {...register('hoTen')}
-              ></TextField>
-              <TextField
-                label="Email"
-                fullWidth
-                error={Boolean(errors.email)}
-                helperText={Boolean(errors.email) && errors.email.message}
-                {...register('email')}
-              ></TextField>
-
-              <TextField
-                label="Tài khoản"
-                fullWidth
-                error={Boolean(errors.taiKhoan)}
-                helperText={Boolean(errors.taiKhoan) && errors.taiKhoan.message}
-                {...register('taiKhoan')}
-              ></TextField>
-
-              <TextField
-                label="Mật khẩu"
-                type="password"
-                error={Boolean(errors.matKhau)}
-                helperText={Boolean(errors.matKhau) && errors.matKhau.message}
-                fullWidth
-                {...register('matKhau')}
-              ></TextField>
-              <TextField
-                label="Số điện thoại"
-                fullWidth
-                error={Boolean(errors.soDt)}
-                helperText={Boolean(errors.soDt) && errors.soDt.message}
-                {...register('soDt')}
-              ></TextField>
-
-              <LoadingButton
-                variant="contained"
-                fullWidth
-                type="submit"
-                size="large"
-                loading={isPending}
+        <Grid
+          container
+          spacing={3}
+          justifyContent={'center'}
+          alignItems={'center'}
+        >
+          <Grid item lg={8}>
+            <Stack
+              alignItems="center"
+              justifyContent="center"
+              sx={{ height: 1 }}
+            >
+              <Card
+                sx={{
+                  p: 5,
+                  width: 1,
+                  mt: 10,
+                  maxWidth: 420,
+                }}
               >
-                Sign up
-              </LoadingButton>
+                <form
+                  onSubmit={handleSubmit(
+                    // (values) => {onSubmit(values)},
+                    onSubmit
+                    // (errors) => {}
+                  )}
+                >
+                  <Stack spacing={3}>
+                    <TextField
+                      label="Họ tên"
+                      fullWidth
+                      error={Boolean(errors.hoTen)}
+                      helperText={Boolean(errors.hoTen) && errors.hoTen.message}
+                      {...register('hoTen')}
+                    ></TextField>
+                    <TextField
+                      label="Email"
+                      fullWidth
+                      error={Boolean(errors.email)}
+                      helperText={Boolean(errors.email) && errors.email.message}
+                      {...register('email')}
+                    ></TextField>
+
+                    <TextField
+                      label="Tài khoản"
+                      fullWidth
+                      error={Boolean(errors.taiKhoan)}
+                      helperText={
+                        Boolean(errors.taiKhoan) && errors.taiKhoan.message
+                      }
+                      {...register('taiKhoan')}
+                    ></TextField>
+
+                    <TextField
+                      label="Mật khẩu"
+                      type="password"
+                      error={Boolean(errors.matKhau)}
+                      helperText={
+                        Boolean(errors.matKhau) && errors.matKhau.message
+                      }
+                      fullWidth
+                      {...register('matKhau')}
+                    ></TextField>
+                    <TextField
+                      label="Số điện thoại"
+                      fullWidth
+                      error={Boolean(errors.soDt)}
+                      helperText={Boolean(errors.soDt) && errors.soDt.message}
+                      {...register('soDt')}
+                    ></TextField>
+
+                    <LoadingButton
+                      variant="contained"
+                      fullWidth
+                      type="submit"
+                      size="large"
+                      loading={isPending}
+                    >
+                      Đăng ký
+                    </LoadingButton>
+                  </Stack>
+                </form>
+              </Card>
             </Stack>
-          </form>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Box>
+      {/* </Container> */}
+    </>
   )
 }
 

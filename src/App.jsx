@@ -37,8 +37,8 @@ function App() {
 
             <Route path={PATH.ADMIN} element={<AdminPage />}>
               <Route path="add-movie" element={<AddMovie />} />
-              <Route path="404" element={<NotFoundPage />} />
               <Route path="user" element={<UserPage />} />
+              <Route path="404" element={<NotFoundPage />} />
             </Route>
 
             <Route path="*" element={<NotFound />}></Route>

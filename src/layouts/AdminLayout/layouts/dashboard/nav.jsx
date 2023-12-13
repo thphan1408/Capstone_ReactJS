@@ -22,7 +22,6 @@ import { useAuth } from '../../../../contexts/UserContext/UserContext'
 
 
 export default function Nav({ openNav, onCloseNav }) {
-  // const pathname = usePathname()
   const { currentUser, handleLogout } = useAuth()
   const pathname = usePathname()
 
