@@ -17,6 +17,8 @@ import AddMovie from './layouts/AdminLayout/sections/movie-management'
 import NotFoundPage from './layouts/AdminLayout/sections/error/not-found-view.jsx'
 import UserPage from './layouts/AdminLayout/pages/user.jsx'
 import ThemeProvider from './theme'
+import { MoviePage } from './layouts/AdminLayout/routes/sections.jsx'
+import ListMovie from './layouts/AdminLayout/pages/list-movie.jsx'
 
 function App() {
   return (
@@ -36,8 +38,9 @@ function App() {
             {/* <Route path="prevent-re-render" element={<Memo />} /> */}
 
             <Route path={PATH.ADMIN} element={<AdminPage />}>
-              <Route path="add-movie" element={<AddMovie />} />
               <Route path="user" element={<UserPage />} />
+              <Route path="add-movie" element={<MoviePage />} />
+              <Route path="list-movie" element={<ListMovie />} />
               <Route path="404" element={<NotFoundPage />} />
             </Route>
 

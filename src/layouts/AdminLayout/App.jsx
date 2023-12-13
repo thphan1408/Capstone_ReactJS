@@ -8,10 +8,10 @@ import { BrowserRouter } from 'react-router-dom'
 
 export default function App() {
   return (
-    <Suspense>
-      <ThemeProvider>
-        <Router />
-      </ThemeProvider>
-    </Suspense>
+    // <Suspense>
+    // <ThemeProvider>
+    <Router />
+    // </ThemeProvider>
+    // </Suspense>
   )
 }

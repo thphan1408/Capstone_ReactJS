@@ -24,16 +24,10 @@ const navConfig = [
     title: 'Thêm phim upload hình',
     path: 'add-movie',
   },
-  // {
-  //   title: 'blog',
-  //   path: '/blog',
-  //   icon: icon('ic_blog'),
-  // },
-  // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: icon('ic_lock'),
-  // },
+  {
+    title: 'Danh sách phim',
+    path: 'list-movie',
+  },
   {
     title: 'Not found',
     path: '404',
