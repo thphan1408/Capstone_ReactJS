@@ -2,11 +2,11 @@ import { lazy, Suspense } from 'react'
 import { Outlet, Navigate, useRoutes } from 'react-router-dom'
 
 import DashboardLayout from '../layouts/dashboard'
-// import MoviePage from '../pages/MovieManagement'
+
 export const IndexPage = lazy(() => import('../pages/app'))
 // export const BlogPage = lazy(() => import('../pages/blog'))
 export const UserPage = lazy(() => import('../pages/user'))
-// export const LoginPage = lazy(() => import('../pages/login'))
+export const ListMoviePage = lazy(() => import('../pages/list-movie'))
 export const MoviePage = lazy(() => import('../pages/MovieManagement'))
 export const Page404 = lazy(() => import('../pages/page-not-found'))
 
@@ -26,6 +26,7 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'add-movie', element: <MoviePage /> },
+        { path: 'list-movie', element: <ListMoviePage /> },
       ],
     },
     // {
