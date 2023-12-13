@@ -15,10 +15,6 @@ const MovieProfile = ({ movieID }) => {
     enabled: !!movieID, // false | true, khi enabled là true thì queryFun mới được kích hoạt. Ngược lại là false thì sẽ không kích hoạt queryFun
   })
 
-  console.log('🚀  data:', data)
-
-  //   useEffect(() => {}, [])
-
   return (
     <Container maxWidth="lg">
       <Grid>

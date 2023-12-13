@@ -10,8 +10,7 @@ export default function MovieManagement() {
       <Helmet>
         <title> Movie Management </title>
       </Helmet>
-
-      <MovieView />
+        <MovieView />
     </>
   )
 }

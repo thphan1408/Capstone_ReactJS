@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 
-import { users } from '../../../_mock/user'
-
 import Iconify from '../../../components/iconify'
 import Scrollbar from '../../../components/scrollbar'
 
@@ -33,11 +31,16 @@ export default function UserPage() {
 
   const [selected, setSelected] = useState([])
 
-  const [orderBy, setOrderBy] = useState('name')
+  const [orderBy, setOrderBy] = useState('taiKhoan')
 
   const [filterName, setFilterName] = useState('')
 
   const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  const { data: userList, isLoading } = useQuery({
+    queryKey: ['get-list-user'],
+    queryFn: () => getListUser(),
+  })
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc'
@@ -46,21 +49,20 @@ export default function UserPage() {
       setOrderBy(id)
     }
   }
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name)
+      const newSelecteds = userList.map((n) => n.taiKhoan)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name)
+  const handleClick = (event, taiKhoan) => {
+    const selectedIndex = selected.indexOf(taiKhoan)
     let newSelected = []
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name)
+      newSelected = newSelected.concat(selected, taiKhoan)
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
@@ -88,19 +90,13 @@ export default function UserPage() {
     setFilterName(event.target.value)
   }
 
-  const dataFiltered = applyFilter({
-    inputData: users,
+  const dataUser = applyFilter({
+    inputData: userList,
     comparator: getComparator(order, orderBy),
     filterName,
   })
 
-  const notFound = !dataFiltered.length && !!filterName
-
-  const { data: userList, isLoading } = useQuery({
-    queryKey: ['get-list-user'],
-    queryFn: () => getListUser(),
-    // enabled: !!showtimesID,
-  })
+  const notFound = !userList?.length && !!filterName
 
   return (
     <Container>
@@ -110,7 +106,7 @@ export default function UserPage() {
         justifyContent="space-between"
         mb={5}
       >
-        <Typography variant="h4">Users</Typography>
+        <Typography variant="h4">Users management</Typography>
 
         <Button
           variant="contained"
@@ -134,41 +130,38 @@ export default function UserPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={userList?.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
+                  { id: 'taiKhoan', label: 'Tài khoản' },
+                  { id: 'hoTen', label: 'Họ tên' },
+                  { id: 'email', label: 'Email' },
+                  { id: 'soDT', label: 'Số điện thoại' },
+                  { id: 'matKhau', label: 'Mật khẩu' },
+                  { id: 'maLoaiNguoiDung', label: 'Mã loại người dùng' },
                   { id: '' },
                 ]}
               />
               <TableBody>
-                {/* {userList.map((user) => {
-                  console.log(user)
-                })} */}
-
-                {dataFiltered.map((row) => (
+                {dataUser?.map((user, index) => (
                   <UserTableRow
-                    key={row.id}
-                    name={row.name}
-                    role={row.role}
-                    status={row.status}
-                    company={row.company}
-                    avatarUrl={row.avatarUrl}
-                    isVerified={row.isVerified}
-                    selected={selected.indexOf(row.name) !== -1}
-                    handleClick={(event) => handleClick(event, row.name)}
+                    key={index}
+                    taiKhoan={user.taiKhoan}
+                    hoTen={user.hoTen}
+                    email={user.email}
+                    soDT={user.soDT}
+                    matKhau={user.matKhau}
+                    maLoaiNguoiDung={user.maLoaiNguoiDung}
+                    selected={selected.indexOf(user.taiKhoan) !== -1}
+                    handleClick={(event) => handleClick(event, user.taiKhoan)}
                   />
                 ))}
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, userList?.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -180,7 +173,7 @@ export default function UserPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={userList?.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

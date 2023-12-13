@@ -13,17 +13,18 @@ import IconButton from '@mui/material/IconButton'
 
 import Label from '../../components/label'
 import Iconify from '../../components/iconify'
+import { Button } from '@mui/material'
 
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
   selected,
-  name,
-  avatarUrl,
-  company,
-  role,
-  isVerified,
-  status,
+  taiKhoan,
+  hoTen,
+  email,
+  soDT,
+  matKhau,
+  maLoaiNguoiDung,
   handleClick,
 }) {
   const [open, setOpen] = useState(null)
@@ -43,26 +44,16 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell component="th" scope="row" padding="none">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
-            <Typography variant="subtitle2" noWrap>
-              {name}
-            </Typography>
-          </Stack>
-        </TableCell>
+        <TableCell>{taiKhoan}</TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{hoTen}</TableCell>
 
-        <TableCell>{role}</TableCell>
+        <TableCell>{email}</TableCell>
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{soDT}</TableCell>
 
-        <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>
-            {status}
-          </Label>
-        </TableCell>
+        <TableCell>{matKhau}</TableCell>
+        <TableCell>{maLoaiNguoiDung}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -82,13 +73,17 @@ export default function UserTableRow({
         }}
       >
         <MenuItem onClick={handleCloseMenu}>
-          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          <Button fullWidth>
+            <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+            Edit
+          </Button>
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+        <MenuItem onClick={handleCloseMenu}>
+          <Button sx={{ color: 'error.main' }} fullWidth>
+            <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+            Delete
+          </Button>
         </MenuItem>
       </Popover>
     </>
@@ -96,12 +91,12 @@ export default function UserTableRow({
 }
 
 UserTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  company: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
-  name: PropTypes.any,
-  role: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
+  maLoaiNguoiDung: PropTypes.any,
+  matKhau: PropTypes.any,
+  soDT: PropTypes.any,
+  taiKhoan: PropTypes.any,
+  hoTen: PropTypes.any,
+  email: PropTypes.string,
 }
