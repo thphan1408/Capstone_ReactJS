@@ -23,6 +23,7 @@ import { bgGradient } from '../../../theme/css'
 
 const SignIn = () => {
   const { currentUser, handleSignin: handleSigninContext } = useAuth()
+  console.log('currentUser: ', currentUser)
   const theme = useTheme()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)

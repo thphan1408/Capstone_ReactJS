@@ -1,17 +1,14 @@
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/UserContext/UserContext'
 import Router from './routes/sections'
-import ThemeProvider from '../../theme'
-import { Suspense } from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { PATH } from '../../routes/path'
 
 // ----------------------------------------------------------------------
 
 export default function App() {
-  return (
-    // <Suspense>
-    // <ThemeProvider>
-    <Router />
-    // </ThemeProvider>
-    // </Suspense>
-  )
+  const { currentUser } = useAuth()
+  if (currentUser?.maLoaiNguoiDung !== 'QuanTri') {
+    return <Navigate to={PATH.HOME} />
+  }
+  return <Router />
 }
