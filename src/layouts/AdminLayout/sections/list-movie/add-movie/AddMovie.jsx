@@ -1,7 +1,16 @@
 import React, { useEffect } from 'react'
 import Rating from '@mui/material/Rating'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import { Box, Grid, Stack, TextField, Typography, Button } from '@mui/material'
+import {
+  Box,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+  Button,
+  FormControlLabel,
+  Switch,
+} from '@mui/material'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -10,8 +19,8 @@ import { useForm, Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
-import { GROUP_CODE } from '../../../../constants'
-import { addMovieAPI } from '../../../../apis/movieAPI'
+import { GROUP_CODE } from '../../../../../constants'
+import { addMovieAPI } from '../../../../../apis/movieAPI'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -33,8 +42,8 @@ const AddMovie = () => {
       moTa: '',
       maNhom: GROUP_CODE,
       ngayKhoiChieu: '',
-      sapChieu: true,
-      dangChieu: false,
+      sapChieu: false,
+      dangChieu: true,
       hot: true,
       danhGia: '',
       hinhAnh: undefined,
@@ -50,6 +59,11 @@ const AddMovie = () => {
     },
     onSuccess: () => {
       //call API
+      Swal.fire({
+        icon: 'success',
+        title: 'Thêm phim thành công',
+        confirmButtonText: 'Ok luôn',
+      })
       queryClient.invalidateQueries({ queryKey: ['list-movie'] })
     },
   })
@@ -61,7 +75,6 @@ const AddMovie = () => {
   }
 
   const onSubmit = (values) => {
-    // console.log('🚀  values:', values)
     const formData = new FormData()
     formData.append('tenPhim', values.tenPhim)
     formData.append('trailer', values.trailer)
@@ -112,12 +125,6 @@ const AddMovie = () => {
                   }}
                 />
 
-                {/* <TextField
-                  label="Đánh giá"
-                  fullWidth
-                  {...register('danhGia')}
-                /> */}
-
                 <Stack direction={'row'} spacing={1}>
                   <Typography component={'h2'}>Đánh giá:</Typography>
                   <Controller
@@ -128,6 +135,7 @@ const AddMovie = () => {
                         <Rating
                           name="size-medium"
                           defaultValue={0}
+                          max={10}
                           onChange={(event) => {
                             setValue('danhGia', event.target.defaultValue)
                           }}
@@ -136,6 +144,62 @@ const AddMovie = () => {
                     }}
                   />
                 </Stack>
+
+                <Stack direction={'row'} spacing={1}>
+                  <Typography component={'h2'}>Đang chiếu:</Typography>
+                  <Controller
+                    control={control}
+                    name="dangChieu"
+                    render={() => {
+                      return (
+                        <Switch
+                          checked={watch('dangChieu')}
+                          onChange={(event) => {
+                            setValue('dangChieu', event.target.checked)
+                            setValue('sapChieu', !event.target.checked)
+                          }}
+                        />
+                      )
+                    }}
+                  />
+                </Stack>
+
+                <Stack direction={'row'} spacing={1}>
+                  <Typography component={'h2'}>Sắp chiếu:</Typography>
+                  <Controller
+                    control={control}
+                    name="sapChieu"
+                    render={() => {
+                      return (
+                        <Switch
+                          checked={watch('sapChieu')}
+                          onChange={(event) => {
+                            setValue('sapChieu', event.target.checked)
+                            setValue('dangChieu', !event.target.checked)
+                          }}
+                        />
+                      )
+                    }}
+                  />
+                </Stack>
+
+                <Stack direction={'row'} spacing={1}>
+                  <Typography component={'h2'}>Phim hot:</Typography>
+                  <Controller
+                    control={control}
+                    name="hot"
+                    render={() => {
+                      return (
+                        <Switch
+                          onChange={(event) => {
+                            setValue('hot', event.target.checked)
+                          }}
+                        />
+                      )
+                    }}
+                  />
+                </Stack>
+
                 {!file && (
                   <Button
                     component="label"
@@ -153,7 +217,20 @@ const AddMovie = () => {
 
                 {file?.length > 0 && (
                   <>
-                    <img src={previewImage(file[0])} width={240} />
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <img
+                        src={previewImage(file[0])}
+                        width={100}
+                        height={100}
+                      />
+                    </Box>
+
                     <Button
                       onClick={() => {
                         setValue('hinhAnh', undefined)

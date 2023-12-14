@@ -20,7 +20,8 @@ import MovieTableToolbar from '../movie-table-toolbar'
 import { getListMovieAPI } from '../../../../../apis/movieAPI'
 import { applyFilter, getComparator, emptyRows } from '../utils'
 import MovieTableRow from '../movie-table-row'
-import ModalAddMovie from '../modal-add-movie'
+import ModalView from '../../modal/modal'
+import AddMovie from '../add-movie/AddMovie'
 
 const ListMovieView = () => {
   const [page, setPage] = useState(0)
@@ -187,7 +188,14 @@ const ListMovieView = () => {
         </Card>
       </Container>
 
-      <ModalAddMovie open={open} handleClose={handleClose} />
+      <ModalView open={open} handleClose={handleClose}>
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Thêm phim upload hình
+        </Typography>
+        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        </Scrollbar>
+          <AddMovie />
+      </ModalView>
     </>
   )
 }
