@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
 import Typography from '@mui/material/Typography'
-import AddMovie from '../AddMovie'
+// import AddMovie from '../../list-movie/add-movie/AddMovie'
 
 // import { products } from '../../../_mock/products'
 
@@ -58,7 +58,7 @@ export default function MovieView() {
         ))}
       </Grid> */}
 
-      <AddMovie />
+      {/* <AddMovie /> */}
     </Container>
   )
 }

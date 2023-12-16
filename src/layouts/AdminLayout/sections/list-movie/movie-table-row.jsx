@@ -14,6 +14,10 @@ import IconButton from '@mui/material/IconButton'
 import Label from '../../components/label'
 import Iconify from '../../components/iconify'
 import { Button } from '@mui/material'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteMovieAPI } from '../../../../apis/movieAPI'
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom'
 
 // ----------------------------------------------------------------------
 
@@ -26,13 +30,52 @@ export default function MovieTableRow({
   handleClick,
 }) {
   const [open, setOpen] = useState(null)
-
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget)
   }
 
   const handleCloseMenu = () => {
     setOpen(null)
+  }
+
+  const { mutate: deleteMovie, isPending } = useMutation({
+    mutationFn: (movieID) => {
+      deleteMovieAPI(movieID)
+    },
+    onSuccess: () => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Xóa phim thành công',
+        confirmButtonText: 'Đồng ý',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          queryClient.invalidateQueries('get-list-movie')
+          // navigate('/admin/list-movie')
+          window.location.reload()
+        }
+        return
+      })
+    },
+    onError: (error) => {
+      console.log('🚀  error:', error)
+    },
+  })
+
+  const handleDeleteMovie = (maPhim) => {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Bạn có chắc chắn muốn xóa phim này?',
+      confirmButtonText: 'Đồng ý',
+      showDenyButton: true,
+      denyButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteMovie(maPhim)
+      }
+      return
+    })
   }
 
   return (
@@ -81,7 +124,13 @@ export default function MovieTableRow({
         </MenuItem>
 
         <MenuItem onClick={handleCloseMenu}>
-          <Button sx={{ color: 'error.main' }} fullWidth>
+          <Button
+            sx={{ color: 'error.main' }}
+            fullWidth
+            onClick={() => {
+              handleDeleteMovie(maPhim)
+            }}
+          >
             <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
             Delete
           </Button>

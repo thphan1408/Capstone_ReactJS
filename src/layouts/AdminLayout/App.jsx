@@ -7,8 +7,9 @@ import { PATH } from '../../routes/path'
 
 export default function App() {
   const { currentUser } = useAuth()
-  if (currentUser?.maLoaiNguoiDung !== 'QuanTri') {
-    return <Navigate to={PATH.HOME} />
+  if (currentUser && currentUser.maLoaiNguoiDung === 'QuanTri') {
+    return <Router />
   }
-  return <Router />
+
+  return <Navigate to={PATH.HOME} />
 }

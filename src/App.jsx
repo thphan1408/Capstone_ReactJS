@@ -13,14 +13,11 @@ import 'slick-carousel/slick/slick-theme.css'
 import TicketMovie from './modules/ticket-movie/TicketMovie'
 import HistoryTicket from './modules/history-ticket/HistoryTicket'
 import AdminPage from './layouts/AdminLayout/App.jsx'
-import AddMovie from './layouts/AdminLayout/sections/movie-management'
 import NotFoundPage from './layouts/AdminLayout/sections/error/not-found-view.jsx'
 import UserPage from './layouts/AdminLayout/pages/user.jsx'
 import ThemeProvider from './theme'
-import { MoviePage } from './layouts/AdminLayout/routes/sections.jsx'
 import ListMovie from './layouts/AdminLayout/pages/list-movie.jsx'
-import { useMutation } from '@tanstack/react-query'
-import { checkRole } from './apis/authAPI.js'
+
 function App() {
   return (
     <UserProvider>
@@ -36,31 +33,9 @@ function App() {
               <Route path={PATH.HISTORY_TICKET} element={<HistoryTicket />} />
             </Route>
 
-            {/* <Route path="prevent-re-render" element={<Memo />} /> */}
-            {() => {
-              console.log(checkRole)
-              // const { mutate: handleSignin, isPending } = useMutation({
-              //   mutationFn: (values) => authAPI(values),
-              //   onSuccess: (values) => {
-              //     // console.log('🚀  values:', values)
-              //     // localStorage.setItem(CURRENT_USER, JSON.stringify(values))
-              //     // values là thông tin user
-              //     handleSigninContext(values)
-              //     if (values.maLoaiNguoiDung === 'KhachHang') {
-              //       navigate(PATH.HOME)
-              //     }
-              //     if (values.maLoaiNguoiDung === 'QuanTri') {
-              //       navigate(PATH.ADMIN)
-              //     }
-              //   },
-              //   onError: (error) => {
-              //     console.log('🚀  error:', error)
-              //   },
-              // })
-            }}
             <Route path={PATH.ADMIN} element={<AdminPage />}>
               <Route path="user" element={<UserPage />} />
-              <Route path="add-movie" element={<MoviePage />} />
+              {/* <Route path="add-movie" element={<MoviePage />} /> */}
               <Route path="list-movie" element={<ListMovie />} />
               <Route path="404" element={<NotFoundPage />} />
             </Route>

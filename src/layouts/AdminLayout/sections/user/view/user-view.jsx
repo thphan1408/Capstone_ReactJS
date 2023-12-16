@@ -21,6 +21,7 @@ import UserTableToolbar from '../user-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 import { useQuery } from '@tanstack/react-query'
 import { getListUser } from '../../../../../apis/userAPI'
+import ModalView from '../../modal/modal'
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,10 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('')
 
   const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const { data: userList, isLoading } = useQuery({
     queryKey: ['get-list-user'],
@@ -112,6 +117,7 @@ export default function UserPage() {
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleOpen}
         >
           New User
         </Button>
@@ -180,6 +186,10 @@ export default function UserPage() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
+
+      <ModalView open={open} handleClose={handleClose}>
+        Này của user
+      </ModalView>
     </Container>
   )
 }

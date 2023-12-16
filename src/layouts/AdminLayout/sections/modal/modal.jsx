@@ -14,12 +14,12 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   borderRadius: '10px',
-//   boxShadow: 24,
+  //   boxShadow: 24,
   p: 4,
 }
 
-const ModalAddMovie = (props) => {
-  const { open, handleClose } = props
+const ModalView = (props) => {
+  const { open, handleClose, children } = props
   return (
     <Modal
       open={open}
@@ -27,16 +27,9 @@ const ModalAddMovie = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography>
-      </Box>
+      <Box sx={style}>{children}</Box>
     </Modal>
   )
 }
 
-export default ModalAddMovie
+export default ModalView

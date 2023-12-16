@@ -20,10 +20,10 @@ const navConfig = [
     path: 'user',
     icon: icon('ic_user'),
   },
-  {
-    title: 'Thêm phim upload hình',
-    path: 'add-movie',
-  },
+  // {
+  //   title: 'Thêm phim upload hình',
+  //   path: 'add-movie',
+  // },
   {
     title: 'Danh sách phim',
     path: 'list-movie',
