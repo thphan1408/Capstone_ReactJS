@@ -192,9 +192,9 @@ const ListMovieView = () => {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Thêm phim upload hình
         </Typography>
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-        </Scrollbar>
-          <AddMovie />
+        {/* <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        </Scrollbar> */}
+        <AddMovie handleClose={handleClose} />
       </ModalView>
     </>
   )

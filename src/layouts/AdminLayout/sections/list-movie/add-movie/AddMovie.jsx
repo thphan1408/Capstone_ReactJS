@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Rating from '@mui/material/Rating'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
@@ -21,6 +21,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
 import { GROUP_CODE } from '../../../../../constants'
 import { addMovieAPI } from '../../../../../apis/movieAPI'
+import Swal from 'sweetalert2'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -34,7 +35,8 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-const AddMovie = () => {
+const AddMovie = ({ handleClose }) => {
+  const queryClient = useQueryClient()
   const { handleSubmit, register, control, setValue, watch } = useForm({
     defaultValues: {
       tenPhim: '',
@@ -44,13 +46,13 @@ const AddMovie = () => {
       ngayKhoiChieu: '',
       sapChieu: false,
       dangChieu: true,
-      hot: true,
+      hot: false,
       danhGia: '',
       hinhAnh: undefined,
     },
   })
 
-  const queryClient = useQueryClient()
+  const file = watch('hinhAnh') // [0]
 
   // useQuery({queryKey: ['list-movie-admin'] })
   const { mutate: handleAddMovie, isPending } = useMutation({
@@ -58,35 +60,51 @@ const AddMovie = () => {
       addMovieAPI(payload)
     },
     onSuccess: () => {
-      //call API
+      handleClose()
+
+      // Hiển thị thông báo thành công (nếu cần)
       Swal.fire({
         icon: 'success',
         title: 'Thêm phim thành công',
         confirmButtonText: 'Ok luôn',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          queryClient.invalidateQueries('get-list-movie')
+        }
       })
-      queryClient.invalidateQueries({ queryKey: ['list-movie'] })
     },
   })
 
-  const file = watch('hinhAnh') // [0]
+  const onSubmit = (values) => {
+    const formData = new FormData()
+    // formData.append('tenPhim', values.tenPhim)
+    // formData.append('trailer', values.trailer)
+    // formData.append('moTa', values.moTa)
+    // formData.append('maNhom', values.maNhom)
+    // formData.append('sapChieu', values.sapChieu)
+    // formData.append('dangChieu', values.dangChieu)
+    // formData.append('hot', values.hot)
+    // formData.append('danhGia', values.danhGia)
+    // formData.append('File', values.hinhAnh[0])
+    for (const key in values) {
+      if (key !== 'hinhAnh') {
+        formData.append(key, values[key])
+      } else {
+        formData.append('file', values.hinhAnh[0], values.hinhAnh.name)
+      }
+    }
+    handleAddMovie(formData)
+  }
 
   const previewImage = (file) => {
     return URL.createObjectURL(file)
   }
 
-  const onSubmit = (values) => {
-    const formData = new FormData()
-    formData.append('tenPhim', values.tenPhim)
-    formData.append('trailer', values.trailer)
-    formData.append('moTa', values.moTa)
-    formData.append('maNhom', values.maNhom)
-    formData.append('sapChieu', values.sapChieu)
-    formData.append('dangChieu', values.dangChieu)
-    formData.append('hot', values.hot)
-    formData.append('danhGia', values.danhGia)
-    formData.append('hinhAnh', values.hinhAnh[0])
-    handleAddMovie(formData)
-  }
+  useEffect(() => {
+    if (file?.length > 0) {
+      console.log('previewImage', previewImage(file?.[0])) // url
+    }
+  }, [file])
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

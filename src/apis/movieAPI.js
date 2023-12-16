@@ -40,6 +40,21 @@ export const addMovieAPI = async (payload) => {
       '/QuanLyPhim/ThemPhimUploadHinh',
       payload
     )
+    // console.log('🚀  response:', response)
+    return response.data.content
+  } catch (error) {
+    throw 'Lỗi rồi'
+  }
+}
+
+// DELETE movie api
+export const deleteMovieAPI = async (movieID) => {
+  try {
+    const response = await fetcher.delete('/QuanLyPhim/XoaPhim', {
+      params: {
+        MaPhim: movieID,
+      },
+    })
     return response.data.content
   } catch (error) {
     throw 'Lỗi rồi'
