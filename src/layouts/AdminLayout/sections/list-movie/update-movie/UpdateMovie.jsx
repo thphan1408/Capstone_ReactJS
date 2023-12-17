@@ -17,11 +17,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { styled } from '@mui/material/styles'
 import { useForm, Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
 import { GROUP_CODE } from '../../../../../constants'
-import { addMovieAPI } from '../../../../../apis/movieAPI'
 import Swal from 'sweetalert2'
+import {
+  getMovieDetailsAPI,
+  updateMovieAPI,
+} from '../../../../../apis/movieAPI'
+import { set } from 'date-fns'
+import { da } from 'date-fns/locale'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -35,76 +40,70 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-const AddMovie = ({ handleClose }) => {
-  const queryClient = useQueryClient()
-  const { handleSubmit, register, control, setValue, watch } = useForm({
-    defaultValues: {
-      tenPhim: '',
-      trailer: '',
-      moTa: '',
-      maNhom: GROUP_CODE,
-      ngayKhoiChieu: '',
-      sapChieu: false,
-      dangChieu: true,
-      hot: false,
-      danhGia: '',
-      hinhAnh: undefined,
-    },
-  })
-
-  const file = watch('hinhAnh') // [0]
-
-  // useQuery({queryKey: ['list-movie-admin'] })
-  const { mutate: handleAddMovie, isPending } = useMutation({
+const UpdateMovie = ({ maPhim }) => {
+  // Cập nhật phim
+  const { mutate: handleUpdateMovie, isPending } = useMutation({
     mutationFn: (payload) => {
-      addMovieAPI(payload)
+      updateMovieAPI(payload)
     },
     onSuccess: () => {
       handleClose()
 
       // Hiển thị thông báo thành công (nếu cần)
-      Swal.fire({
-        icon: 'success',
-        title: 'Thêm phim thành công',
-        confirmButtonText: 'Ok luôn',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          queryClient.invalidateQueries('get-list-movie')
-        }
-      })
+      //   Swal.fire({
+      //     icon: 'success',
+      //     title: 'Thêm phim thành công',
+      //     confirmButtonText: 'Ok luôn',
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       queryClient.invalidateQueries('get-list-movie')
+      //     }
+      //   })
     },
   })
 
-  const onSubmit = (values) => {
-    const formData = new FormData()
-    // formData.append('tenPhim', values.tenPhim)
-    // formData.append('trailer', values.trailer)
-    // formData.append('moTa', values.moTa)
-    // formData.append('maNhom', values.maNhom)
-    // formData.append('sapChieu', values.sapChieu)
-    // formData.append('dangChieu', values.dangChieu)
-    // formData.append('hot', values.hot)
-    // formData.append('danhGia', values.danhGia)
-    // formData.append('File', values.hinhAnh[0])
-    for (const key in values) {
-      if (key !== 'hinhAnh') {
-        formData.append(key, values[key])
-      } else {
-        formData.append('file', values.hinhAnh[0], values.hinhAnh.name)
-      }
-    }
-    handleAddMovie(formData)
-  }
+  // Lấy dữ liệu phim cần cập nhật
+  const {
+    data = {},
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['get-movie-details', maPhim],
+    queryFn: () => getMovieDetailsAPI(maPhim),
+    enabled: !!maPhim,
+    // false | true, khi enabled là true thì queryFun mới được kích hoạt. Ngược lại là false thì sẽ không kích hoạt queryFun
+  })
 
-  const previewImage = (file) => {
-    return URL.createObjectURL(file)
-  }
+  const { handleSubmit, register, control, setValue, watch } = useForm({
+    defaultValues: {
+      tenPhim: data.tenPhim || '',
+      trailer: data.trailer || '',
+      moTa: data.moTa || '',
+      ngayKhoiChieu: data.ngayKhoiChieu || '',
+      danhGia: data.danhGia || '',
+      dangChieu: data.dangChieu || '',
+      sapChieu: data.sapChieu || '',
+      hot: data.hot || '',
+      hinhAnh: data.hinhAnh || undefined,
+    },
+  })
 
-  // useEffect(() => {
-  //   if (file?.length > 0) {
-  //     previewImage(file?.[0]) // url
-  //   }
-  // }, [file])
+  //   const file = watch('hinhAnh') // [0]
+
+  useEffect(() => {
+    // Set default values when data changes
+    setValue('tenPhim', data.tenPhim || '')
+    setValue('trailer', data.trailer || '')
+    setValue('moTa', data.moTa || '')
+    setValue('ngayKhoiChieu', data.ngayKhoiChieu || '')
+    setValue('danhGia', data.danhGia || '')
+    setValue('dangChieu', data.dangChieu || '')
+    setValue('sapChieu', data.sapChieu || '')
+    setValue('hot', data.hot || false)
+    setValue('hinhAnh', data.hinhAnh || '')
+  }, [data, setValue, control])
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -115,8 +114,9 @@ const AddMovie = ({ handleClose }) => {
           alignItems={'center'}
           spacing={3}
         >
+          {/* onSubmit={handleSubmit(onSubmit)} */}
           <Grid item md={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form>
               <Stack spacing={2} direction={'column'}>
                 <TextField
                   label="Tên phim"
@@ -134,8 +134,8 @@ const AddMovie = ({ handleClose }) => {
                         label="Ngày chiếu"
                         format="DD/MM/YYYY"
                         onChange={(date) => {
-                          const value = dayjs(date).format('DD/MM/YYYY')
-                          setValue('ngayKhoiChieu', value)
+                          const formattedDate = dayjs(date).format('DD/MM/YYYY')
+                          setValue('ngayKhoiChieu', formattedDate)
                         }}
                         {...field}
                       />
@@ -148,18 +148,18 @@ const AddMovie = ({ handleClose }) => {
                   <Controller
                     control={control}
                     name="danhGia"
-                    render={() => {
-                      return (
-                        <Rating
-                          name="size-medium"
-                          defaultValue={0}
-                          max={10}
-                          onChange={(event) => {
-                            setValue('danhGia', event.target.defaultValue)
-                          }}
-                        />
-                      )
-                    }}
+                    render={({ field }) => (
+                      <Rating
+                        {...field}
+                        name="size-medium"
+                        defaultValue={0}
+                        max={10}
+                        value={parseInt(watch('danhGia'))} // Chuyển đổi giá trị thành số
+                        onChange={(event) => {
+                          setValue('danhGia', event.target.defaultValue)
+                        }}
+                      />
+                    )}
                   />
                 </Stack>
 
@@ -206,9 +206,10 @@ const AddMovie = ({ handleClose }) => {
                   <Controller
                     control={control}
                     name="hot"
-                    render={() => {
+                    render={({ field }) => {
                       return (
                         <Switch
+                          checked={watch('hot')}
                           onChange={(event) => {
                             setValue('hot', event.target.checked)
                           }}
@@ -218,7 +219,7 @@ const AddMovie = ({ handleClose }) => {
                   />
                 </Stack>
 
-                {(!file || file.length === 0) && (
+                {(!filePreview || filePreview.length === 0) && (
                   <Button
                     component="label"
                     variant="contained"
@@ -228,12 +229,13 @@ const AddMovie = ({ handleClose }) => {
                     <VisuallyHiddenInput
                       accept=".png, .gif, .jpg"
                       type="file"
+                      onChange={handleFileChange}
                       {...register('hinhAnh')}
                     />
                   </Button>
                 )}
 
-                {file?.length > 0 && (
+                {filePreview && (
                   <>
                     <Box
                       sx={{
@@ -242,30 +244,34 @@ const AddMovie = ({ handleClose }) => {
                         justifyContent: 'center',
                       }}
                     >
-                      <img
-                        src={previewImage(file[0])}
-                        width={100}
-                        height={100}
-                      />
+                      <img src={filePreview} width={100} height={100} />
                     </Box>
 
                     <Button
                       onClick={() => {
+                        setFilePreview(null)
                         setValue('hinhAnh', undefined)
                       }}
                     >
                       Xóa hình
                     </Button>
+                    {/* <Button
+                      onClick={() => {
+                        setValue('hinhAnh', undefined)
+                      }}
+                    >
+                      Xóa hình
+                    </Button> */}
                   </>
                 )}
 
                 <LoadingButton
-                  loading={isPending}
+                  disabled={isPending}
                   variant="contained"
                   size="large"
                   type="submit"
                 >
-                  Thêm phim
+                  Cập nhật phim
                 </LoadingButton>
               </Stack>
             </form>
@@ -276,4 +282,4 @@ const AddMovie = ({ handleClose }) => {
   )
 }
 
-export default AddMovie
+export default UpdateMovie

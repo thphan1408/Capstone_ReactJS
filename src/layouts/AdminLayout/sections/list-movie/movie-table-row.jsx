@@ -18,6 +18,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteMovieAPI } from '../../../../apis/movieAPI'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
+import ModalView from '../modal/modal'
+import AddMovie from './add-movie/AddMovie'
+import UpdateMovie from './update-movie/UpdateMovie'
 
 // ----------------------------------------------------------------------
 
@@ -29,15 +32,19 @@ export default function MovieTableRow({
   moTa,
   handleClick,
 }) {
-  const [open, setOpen] = useState(null)
+  const [openMenu, setOpenMenu] = useState(null)
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
+
+  const [openModal, setOpenModal] = useState(false)
+  const handleOpenModal = () => setOpenModal(true)
+  const handleCloseModal = () => setOpenModal(false)
+
   const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget)
+    setOpenMenu(event.currentTarget)
   }
 
   const handleCloseMenu = () => {
-    setOpen(null)
+    setOpenMenu(null)
   }
 
   const { mutate: deleteMovie, isPending } = useMutation({
@@ -53,7 +60,6 @@ export default function MovieTableRow({
         if (result.isConfirmed) {
           queryClient.invalidateQueries('get-list-movie')
           // navigate('/admin/list-movie')
-          window.location.reload()
         }
         return
       })
@@ -107,8 +113,8 @@ export default function MovieTableRow({
       </TableRow>
 
       <Popover
-        open={!!open}
-        anchorEl={open}
+        open={!!openMenu}
+        anchorEl={openMenu}
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -117,7 +123,7 @@ export default function MovieTableRow({
         }}
       >
         <MenuItem onClick={handleCloseMenu}>
-          <Button fullWidth>
+          <Button fullWidth onClick={handleOpenModal}>
             <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
             Edit
           </Button>
@@ -136,6 +142,15 @@ export default function MovieTableRow({
           </Button>
         </MenuItem>
       </Popover>
+
+      <ModalView open={openModal} handleClose={handleCloseModal}>
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Cập nhật phim upload hình
+        </Typography>
+        {/* <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        </Scrollbar> */}
+        <UpdateMovie maPhim={maPhim} />
+      </ModalView>
     </>
   )
 }

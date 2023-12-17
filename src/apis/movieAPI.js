@@ -60,3 +60,16 @@ export const deleteMovieAPI = async (movieID) => {
     throw 'Lỗi rồi'
   }
 }
+
+// UPDATE movie api
+export const updateMovieAPI = async (payload) => {
+  try {
+    const response = await fetcher.post(
+      '/QuanLyPhim/CapNhatPhimUpload',
+      payload
+    )
+    return response.data.content
+  } catch (error) {
+    throw 'Lỗi rồi'
+  }
+}
