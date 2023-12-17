@@ -25,9 +25,6 @@ import {
   getMovieDetailsAPI,
   updateMovieAPI,
 } from '../../../../../apis/movieAPI'
-import { set } from 'date-fns'
-import { da } from 'date-fns/locale'
-
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -40,7 +37,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-const UpdateMovie = ({ maPhim }) => {
+const UpdateMovie = ({ maPhim, handleClose }) => {
   // Cập nhật phim
   const { mutate: handleUpdateMovie, isPending } = useMutation({
     mutationFn: (payload) => {
@@ -80,6 +77,7 @@ const UpdateMovie = ({ maPhim }) => {
       tenPhim: data.tenPhim || '',
       trailer: data.trailer || '',
       moTa: data.moTa || '',
+      maNhom: GROUP_CODE,
       ngayKhoiChieu: data.ngayKhoiChieu || '',
       danhGia: data.danhGia || '',
       dangChieu: data.dangChieu || '',
@@ -88,8 +86,6 @@ const UpdateMovie = ({ maPhim }) => {
       hinhAnh: data.hinhAnh || undefined,
     },
   })
-
-  //   const file = watch('hinhAnh') // [0]
 
   useEffect(() => {
     // Set default values when data changes
@@ -104,6 +100,29 @@ const UpdateMovie = ({ maPhim }) => {
     setValue('hinhAnh', data.hinhAnh || '')
   }, [data, setValue, control])
 
+  const file = watch('hinhAnh') // [0]
+
+  const handleChange = (event) => {
+    const imgSrc = URL.createObjectURL(event.target.files[0])
+    setValue('hinhAnh', imgSrc)
+  }
+
+  const onSubmitUpdate = (values) => {
+    console.log('🚀  values:', values.hinhAnh)
+    const formData = new FormData()
+
+    formData.append('tenPhim', values.tenPhim)
+    formData.append('trailer', values.trailer)
+    formData.append('moTa', values.moTa)
+    formData.append('sapChieu', values.sapChieu)
+    formData.append('dangChieu', values.dangChieu)
+    formData.append('hot', values.hot)
+    formData.append('ngayKhoiChieu', values.ngayKhoiChieu)
+    formData.append('danhGia', values.danhGia)
+    formData.append('hinhAnh', values.hinhAnh)
+
+    handleUpdateMovie(formData)
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -114,9 +133,8 @@ const UpdateMovie = ({ maPhim }) => {
           alignItems={'center'}
           spacing={3}
         >
-          {/* onSubmit={handleSubmit(onSubmit)} */}
           <Grid item md={6}>
-            <form>
+            <form onSubmit={handleSubmit(onSubmitUpdate)}>
               <Stack spacing={2} direction={'column'}>
                 <TextField
                   label="Tên phim"
@@ -219,7 +237,7 @@ const UpdateMovie = ({ maPhim }) => {
                   />
                 </Stack>
 
-                {(!filePreview || filePreview.length === 0) && (
+                {!file && (
                   <Button
                     component="label"
                     variant="contained"
@@ -229,13 +247,13 @@ const UpdateMovie = ({ maPhim }) => {
                     <VisuallyHiddenInput
                       accept=".png, .gif, .jpg"
                       type="file"
-                      onChange={handleFileChange}
                       {...register('hinhAnh')}
+                      onChange={handleChange}
                     />
                   </Button>
                 )}
 
-                {filePreview && (
+                {file && (
                   <>
                     <Box
                       sx={{
@@ -244,24 +262,15 @@ const UpdateMovie = ({ maPhim }) => {
                         justifyContent: 'center',
                       }}
                     >
-                      <img src={filePreview} width={100} height={100} />
+                      <img src={file} width={100} height={100} />
                     </Box>
-
                     <Button
                       onClick={() => {
-                        setFilePreview(null)
                         setValue('hinhAnh', undefined)
                       }}
                     >
                       Xóa hình
                     </Button>
-                    {/* <Button
-                      onClick={() => {
-                        setValue('hinhAnh', undefined)
-                      }}
-                    >
-                      Xóa hình
-                    </Button> */}
                   </>
                 )}
 
