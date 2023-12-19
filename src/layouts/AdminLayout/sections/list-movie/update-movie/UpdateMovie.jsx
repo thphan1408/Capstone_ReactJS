@@ -38,6 +38,8 @@ const VisuallyHiddenInput = styled('input')({
 })
 
 const UpdateMovie = ({ maPhim, handleClose }) => {
+  const queryClient = useQueryClient()
+
   // Cập nhật phim
   const { mutate: handleUpdateMovie, isPending } = useMutation({
     mutationFn: (payload) => {
@@ -47,15 +49,15 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
       handleClose()
 
       // Hiển thị thông báo thành công (nếu cần)
-      //   Swal.fire({
-      //     icon: 'success',
-      //     title: 'Thêm phim thành công',
-      //     confirmButtonText: 'Ok luôn',
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       queryClient.invalidateQueries('get-list-movie')
-      //     }
-      //   })
+      Swal.fire({
+        icon: 'success',
+        title: 'Cập nhật phim thành công',
+        confirmButtonText: 'Ok luôn',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          queryClient.invalidateQueries('get-list-movie')
+        }
+      })
     },
   })
 
@@ -95,33 +97,49 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
     setValue('ngayKhoiChieu', data.ngayKhoiChieu || '')
     setValue('danhGia', data.danhGia || '')
     setValue('dangChieu', data.dangChieu || '')
-    setValue('sapChieu', data.sapChieu || '')
+    setValue('sapChieu', data.sapChieu || false)
     setValue('hot', data.hot || false)
-    setValue('hinhAnh', data.hinhAnh || '')
+    setValue('hinhAnh', data.hinhAnh || undefined)
   }, [data, setValue, control])
 
   const file = watch('hinhAnh') // [0]
 
   const handleChange = (event) => {
-    const imgSrc = URL.createObjectURL(event.target.files[0])
-    setValue('hinhAnh', imgSrc)
+    const file = event.target.files[0]
+    setValue('hinhAnh', file)
   }
 
   const onSubmitUpdate = (values) => {
-    console.log('🚀  values:', values.hinhAnh)
     const formData = new FormData()
 
+    formData.append('maPhim', maPhim)
     formData.append('tenPhim', values.tenPhim)
     formData.append('trailer', values.trailer)
     formData.append('moTa', values.moTa)
+    formData.append('maNhom', GROUP_CODE)
     formData.append('sapChieu', values.sapChieu)
-    formData.append('dangChieu', values.dangChieu)
+    formData.append('dangChieu', values.dangChieu || false)
     formData.append('hot', values.hot)
     formData.append('ngayKhoiChieu', values.ngayKhoiChieu)
     formData.append('danhGia', values.danhGia)
-    formData.append('hinhAnh', values.hinhAnh)
+
+    // Nếu có hình ảnh mới thì mới append vào formData
+    if (file) {
+      formData.append('hinhAnh', values.hinhAnh)
+    }
 
     handleUpdateMovie(formData)
+  }
+
+  const previewImage = (file) => {
+    // return file ? URL.createObjectURL(new Blob([file])) : ''
+    if (file instanceof File || file instanceof Blob) {
+      return URL.createObjectURL(file)
+    } else if (typeof file === 'string') {
+      return file // Assuming it's already a URL
+    } else {
+      return '' // Handle other cases or return a default URL
+    }
   }
 
   return (
@@ -152,7 +170,8 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
                         label="Ngày chiếu"
                         format="DD/MM/YYYY"
                         onChange={(date) => {
-                          const formattedDate = dayjs(date).format('DD/MM/YYYY')
+                          const formattedDate =
+                            dayjs(date).format('DD/MM/YYYY ~ HH:mm')
                           setValue('ngayKhoiChieu', formattedDate)
                         }}
                         {...field}
@@ -224,7 +243,7 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
                   <Controller
                     control={control}
                     name="hot"
-                    render={({ field }) => {
+                    render={() => {
                       return (
                         <Switch
                           checked={watch('hot')}
@@ -237,7 +256,7 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
                   />
                 </Stack>
 
-                {!file && (
+                {(!file || file.length === 0) && (
                   <Button
                     component="label"
                     variant="contained"
@@ -262,7 +281,13 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
                         justifyContent: 'center',
                       }}
                     >
-                      <img src={file} width={100} height={100} />
+                      <img
+                        src={
+                          typeof file === 'string' ? file : previewImage(file)
+                        }
+                        width={100}
+                        height={100}
+                      />
                     </Box>
                     <Button
                       onClick={() => {
