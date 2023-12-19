@@ -171,15 +171,10 @@ export default function MovieTableRow({
       </Popover>
 
       <ModalView open={openModal} handleClose={handleCloseModal}>
-        {/* <Typography variant="h4" sx={{ mb: 5 }}>
-          Cập nhật phim upload hình
-        </Typography>
-        <UpdateMovie maPhim={maPhim} handleClose={handleCloseModal} /> */}
-
         <Typography variant="h4" sx={{ mb: 5 }}>
           {selectedModal === 'update'
             ? 'Cập nhật phim upload hình'
-            : 'Tạo lịch chiếu'}
+            : `Tạo lịch chiếu cho phim: ${tenPhim}`}
         </Typography>
         {selectedModal === 'update' ? (
           <UpdateMovie maPhim={maPhim} handleClose={handleCloseModal} />
