@@ -74,6 +74,7 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
           <Grid item md={6}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2} direction={'column'}>
+
                 <Controller
                   control={control}
                   name="maRap"
