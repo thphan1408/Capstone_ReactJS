@@ -21,3 +21,12 @@ export const ticketSet = async (ticket) => {
     throw 'Lỗi'
   }
 }
+
+export const createTimeAPI = async (payload) => {
+  try {
+    const response = await fetcher.post('/QuanLyDatVe/TaoLichChieu', payload)
+    return response.data.content
+  } catch (error) {
+    throw 'Lỗi'
+  }
+}
