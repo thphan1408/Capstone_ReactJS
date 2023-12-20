@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Grid, Stack, TextField } from '@mui/material'
+import { Box, Grid, MenuItem, Select, Stack, TextField } from '@mui/material'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { styled } from '@mui/material/styles'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, set } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
@@ -31,7 +31,7 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
     onSuccess: () => {
       handleClose()
 
-      // Hiển thị thông báo thành công (nếu cần)
+      // Hiển thị thông báo thành công
       Swal.fire({
         icon: 'success',
         title: 'Tạo lịch thành công',
@@ -41,12 +41,12 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
   })
 
   // Form - Tạo lịch chiếu
-  const { handleSubmit, register, control, setValue } = useForm({
+  const { handleSubmit, register, control, setValue, watch } = useForm({
     defaultValues: {
       maPhim: maPhim,
       ngayChieuGioChieu: '',
       giaVe: '',
-      maRap: data?.maHeThongRap || '',
+      maRap: '',
     },
   })
 
@@ -59,6 +59,7 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
   }
 
   const onSubmit = (values) => {
+    // console.log('🚀  values:', values)
     handleCreateTime(values)
   }
 
@@ -74,35 +75,17 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
           <Grid item md={6}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2} direction={'column'}>
-
-                <Controller
-                  control={control}
-                  name="maRap"
-                  render={({ field }) => {
+                <TextField select fullWidth label="Cụm rạp">
+                  {data?.map((system, index) => {
                     return (
-                      <TextField
-                        select
-                        fullWidth
-                        label="Cụm rạp"
-                        onChange={(event) =>
-                          handleCinemaChange(event.target.value)
-                        }
-                        {...field}
-                      >
-                        {data?.map((system, index) => {
-                          return (
-                            <CinemaComplex
-                              key={index}
-                              maHeThongRap={system.maHeThongRap}
-                              onCinemaChange={handleCinemaChange}
-                            />
-                          )
-                        })}
-                      </TextField>
+                      <CinemaComplex
+                        key={index}
+                        maHeThongRap={system.maHeThongRap}
+                        onCinemaChange={handleCinemaChange}
+                      />
                     )
-                  }}
-                />
-
+                  })}
+                </TextField>
                 <Controller
                   control={control}
                   name="ngayChieuGioChieu"

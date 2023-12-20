@@ -91,9 +91,7 @@ const Cinema = () => {
               select
               id="phim"
               fullWidth
-              // variant="standard"value={age}
               label="Phim"
-              // sx={{ width: '250px' }}
             >
               {listMovie?.map((phim) => {
                 return (
@@ -115,8 +113,6 @@ const Cinema = () => {
               select
               fullWidth
               label="Rạp"
-              // variant="standard"
-              // sx={{ width: '250px' }}
             >
               {cinemaSystems?.map((item) => {
                 return item.cumRapChieu?.map((rap) => {
@@ -141,8 +137,6 @@ const Cinema = () => {
               fullWidth
               select
               label="Ngày giờ chiếu"
-              // variant="standard"
-              // sx={{ width: '250px' }}
             >
               {cinemaSystems.map((item) => {
                 return item.cumRapChieu.map((rap) => {
