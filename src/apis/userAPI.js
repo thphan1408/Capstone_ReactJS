@@ -1,8 +1,16 @@
+import { GROUP_CODE } from '../constants'
 import fetcher from './fetcher'
 
 export const getListUser = async () => {
   try {
-    const response = await fetcher.get('/QuanLyNguoiDung/LayDanhSachNguoiDung')
+    const response = await fetcher.get(
+      '/QuanLyNguoiDung/LayDanhSachNguoiDung',
+      {
+        params: {
+          maNhom: GROUP_CODE,
+        },
+      }
+    )
     return response.data.content
   } catch (error) {
     throw 'Lỗi'
@@ -29,6 +37,26 @@ export const signinAPI = async (payload) => {
   }
 }
 
+export const addUserApi = async (user) => {
+  try {
+    const response = await fetcher.post('/QuanLyNguoiDung/ThemNguoiDung', user)
+    return response.data.content
+  } catch (error) {
+    throw 'Lỗi rồi'
+  }
+}
+export const editUserApi = async (user) => {
+  try {
+    const { userId } = user
+    const response = await fetcher.put(
+      '/QuanLyNguoiDung/CapNhatThongTinNguoiDung',
+      user
+    )
+    return response.data.content
+  } catch (error) {
+    throw 'Lỗi rồi'
+  }
+}
 export const infoUserAPI = async () => {
   try {
     const response = await fetcher.post('/QuanLyNguoiDung/ThongTinTaiKhoan')
