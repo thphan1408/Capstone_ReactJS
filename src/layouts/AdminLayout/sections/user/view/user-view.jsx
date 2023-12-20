@@ -22,6 +22,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils'
 import { useQuery } from '@tanstack/react-query'
 import { getListUser } from '../../../../../apis/userAPI'
 import ModalView from '../../modal/modal'
+import AddUser from '../add-user'
 
 // ----------------------------------------------------------------------
 
@@ -188,7 +189,10 @@ export default function UserPage() {
       </Card>
 
       <ModalView open={open} handleClose={handleClose}>
-        Này của user
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Thêm người dùng
+        </Typography>
+        <AddUser handleClose={handleClose} />
       </ModalView>
     </Container>
   )
