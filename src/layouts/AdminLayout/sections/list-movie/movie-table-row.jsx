@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom'
 import ModalView from '../modal/modal'
 import AddMovie from './add-movie/AddMovie'
 import UpdateMovie from './update-movie/UpdateMovie'
+import CreateTimeMovie from './create-time-movie'
 
 // ----------------------------------------------------------------------
 
@@ -32,12 +33,22 @@ export default function MovieTableRow({
   moTa,
   handleClick,
 }) {
+  const [selectedModal, setSelectedModal] = useState(null)
+
   const [openMenu, setOpenMenu] = useState(null)
+
   const queryClient = useQueryClient()
 
   const [openModal, setOpenModal] = useState(false)
-  const handleOpenModal = () => setOpenModal(true)
-  const handleCloseModal = () => setOpenModal(false)
+
+  const handleOpenModal = (modalType) => {
+    setOpenModal(true)
+    setSelectedModal(modalType)
+  }
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    setSelectedModal(null)
+  }
 
   const handleOpenMenu = (event) => {
     setOpenMenu(event.currentTarget)
@@ -59,7 +70,6 @@ export default function MovieTableRow({
       }).then((result) => {
         if (result.isConfirmed) {
           queryClient.invalidateQueries('get-list-movie')
-          // navigate('/admin/list-movie')
         }
         return
       })
@@ -123,9 +133,26 @@ export default function MovieTableRow({
         }}
       >
         <MenuItem onClick={handleCloseMenu}>
-          <Button fullWidth onClick={handleOpenModal}>
+          <Button
+            fullWidth
+            onClick={() => {
+              handleOpenModal('update')
+            }}
+          >
             <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-            Edit
+            Sửa
+          </Button>
+        </MenuItem>
+
+        <MenuItem onClick={handleCloseMenu}>
+          <Button
+            fullWidth
+            onClick={() => {
+              handleOpenModal('create')
+            }}
+          >
+            <Iconify icon="eva:plus-outline" sx={{ mr: 2 }} />
+            Tạo lịch chiếu
           </Button>
         </MenuItem>
 
@@ -138,18 +165,22 @@ export default function MovieTableRow({
             }}
           >
             <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-            Delete
+            Xóa
           </Button>
         </MenuItem>
       </Popover>
 
       <ModalView open={openModal} handleClose={handleCloseModal}>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Cập nhật phim upload hình
+          {selectedModal === 'update'
+            ? 'Cập nhật phim upload hình'
+            : `Tạo lịch chiếu cho phim: ${tenPhim}`}
         </Typography>
-        {/* <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-        </Scrollbar> */}
-        <UpdateMovie maPhim={maPhim} />
+        {selectedModal === 'update' ? (
+          <UpdateMovie maPhim={maPhim} handleClose={handleCloseModal} />
+        ) : (
+          <CreateTimeMovie handleClose={handleCloseModal} maPhim={maPhim} />
+        )}
       </ModalView>
     </>
   )

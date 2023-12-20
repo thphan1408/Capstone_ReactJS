@@ -25,9 +25,6 @@ import {
   getMovieDetailsAPI,
   updateMovieAPI,
 } from '../../../../../apis/movieAPI'
-import { set } from 'date-fns'
-import { da } from 'date-fns/locale'
-
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -40,7 +37,9 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-const UpdateMovie = ({ maPhim }) => {
+const UpdateMovie = ({ maPhim, handleClose }) => {
+  const queryClient = useQueryClient()
+
   // Cập nhật phim
   const { mutate: handleUpdateMovie, isPending } = useMutation({
     mutationFn: (payload) => {
@@ -50,15 +49,15 @@ const UpdateMovie = ({ maPhim }) => {
       handleClose()
 
       // Hiển thị thông báo thành công (nếu cần)
-      //   Swal.fire({
-      //     icon: 'success',
-      //     title: 'Thêm phim thành công',
-      //     confirmButtonText: 'Ok luôn',
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       queryClient.invalidateQueries('get-list-movie')
-      //     }
-      //   })
+      Swal.fire({
+        icon: 'success',
+        title: 'Cập nhật phim thành công',
+        confirmButtonText: 'Ok luôn',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          queryClient.invalidateQueries('get-list-movie')
+        }
+      })
     },
   })
 
@@ -80,6 +79,7 @@ const UpdateMovie = ({ maPhim }) => {
       tenPhim: data.tenPhim || '',
       trailer: data.trailer || '',
       moTa: data.moTa || '',
+      maNhom: GROUP_CODE,
       ngayKhoiChieu: data.ngayKhoiChieu || '',
       danhGia: data.danhGia || '',
       dangChieu: data.dangChieu || '',
@@ -89,8 +89,6 @@ const UpdateMovie = ({ maPhim }) => {
     },
   })
 
-  //   const file = watch('hinhAnh') // [0]
-
   useEffect(() => {
     // Set default values when data changes
     setValue('tenPhim', data.tenPhim || '')
@@ -99,11 +97,50 @@ const UpdateMovie = ({ maPhim }) => {
     setValue('ngayKhoiChieu', data.ngayKhoiChieu || '')
     setValue('danhGia', data.danhGia || '')
     setValue('dangChieu', data.dangChieu || '')
-    setValue('sapChieu', data.sapChieu || '')
+    setValue('sapChieu', data.sapChieu || false)
     setValue('hot', data.hot || false)
-    setValue('hinhAnh', data.hinhAnh || '')
+    setValue('hinhAnh', data.hinhAnh || undefined)
   }, [data, setValue, control])
 
+  const file = watch('hinhAnh') // [0]
+
+  const handleChange = (event) => {
+    const file = event.target.files[0]
+    setValue('hinhAnh', file)
+  }
+
+  const onSubmitUpdate = (values) => {
+    const formData = new FormData()
+
+    formData.append('maPhim', maPhim)
+    formData.append('tenPhim', values.tenPhim)
+    formData.append('trailer', values.trailer)
+    formData.append('moTa', values.moTa)
+    formData.append('maNhom', GROUP_CODE)
+    formData.append('sapChieu', values.sapChieu)
+    formData.append('dangChieu', values.dangChieu || false)
+    formData.append('hot', values.hot)
+    formData.append('ngayKhoiChieu', values.ngayKhoiChieu)
+    formData.append('danhGia', values.danhGia)
+
+    // Nếu có hình ảnh mới thì mới append vào formData
+    if (file) {
+      formData.append('hinhAnh', values.hinhAnh)
+    }
+
+    handleUpdateMovie(formData)
+  }
+
+  const previewImage = (file) => {
+    // return file ? URL.createObjectURL(new Blob([file])) : ''
+    if (file instanceof File || file instanceof Blob) {
+      return URL.createObjectURL(file)
+    } else if (typeof file === 'string') {
+      return file // Assuming it's already a URL
+    } else {
+      return '' // Handle other cases or return a default URL
+    }
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -114,9 +151,8 @@ const UpdateMovie = ({ maPhim }) => {
           alignItems={'center'}
           spacing={3}
         >
-          {/* onSubmit={handleSubmit(onSubmit)} */}
           <Grid item md={6}>
-            <form>
+            <form onSubmit={handleSubmit(onSubmitUpdate)}>
               <Stack spacing={2} direction={'column'}>
                 <TextField
                   label="Tên phim"
@@ -134,7 +170,8 @@ const UpdateMovie = ({ maPhim }) => {
                         label="Ngày chiếu"
                         format="DD/MM/YYYY"
                         onChange={(date) => {
-                          const formattedDate = dayjs(date).format('DD/MM/YYYY')
+                          const formattedDate =
+                            dayjs(date).format('DD/MM/YYYY ~ HH:mm')
                           setValue('ngayKhoiChieu', formattedDate)
                         }}
                         {...field}
@@ -206,7 +243,7 @@ const UpdateMovie = ({ maPhim }) => {
                   <Controller
                     control={control}
                     name="hot"
-                    render={({ field }) => {
+                    render={() => {
                       return (
                         <Switch
                           checked={watch('hot')}
@@ -219,7 +256,7 @@ const UpdateMovie = ({ maPhim }) => {
                   />
                 </Stack>
 
-                {(!filePreview || filePreview.length === 0) && (
+                {(!file || file.length === 0) && (
                   <Button
                     component="label"
                     variant="contained"
@@ -229,13 +266,13 @@ const UpdateMovie = ({ maPhim }) => {
                     <VisuallyHiddenInput
                       accept=".png, .gif, .jpg"
                       type="file"
-                      onChange={handleFileChange}
                       {...register('hinhAnh')}
+                      onChange={handleChange}
                     />
                   </Button>
                 )}
 
-                {filePreview && (
+                {file && (
                   <>
                     <Box
                       sx={{
@@ -244,24 +281,21 @@ const UpdateMovie = ({ maPhim }) => {
                         justifyContent: 'center',
                       }}
                     >
-                      <img src={filePreview} width={100} height={100} />
+                      <img
+                        src={
+                          typeof file === 'string' ? file : previewImage(file)
+                        }
+                        width={100}
+                        height={100}
+                      />
                     </Box>
-
                     <Button
                       onClick={() => {
-                        setFilePreview(null)
                         setValue('hinhAnh', undefined)
                       }}
                     >
                       Xóa hình
                     </Button>
-                    {/* <Button
-                      onClick={() => {
-                        setValue('hinhAnh', undefined)
-                      }}
-                    >
-                      Xóa hình
-                    </Button> */}
                   </>
                 )}
 
