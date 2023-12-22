@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Grid, MenuItem, Select, Stack, TextField } from '@mui/material'
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from '@mui/material'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { styled } from '@mui/material/styles'
-import { useForm, Controller, set } from 'react-hook-form'
+import { useForm, Controller, set, useWatch } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
 import Swal from 'sweetalert2'
-import CinemaComplex from './CinemaComplex/CinemaComplex'
-import { getInfoCinemaSystem } from '../../../../../apis/cinemaAPI'
+import {
+  getInfoCinemaBySystem,
+  getInfoCinemaSystem,
+} from '../../../../../apis/cinemaAPI'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import { createTimeAPI } from '../../../../../apis/ticketAPI'
 
 const CreateTimeMovie = ({ maPhim, handleClose }) => {
-  const [selectedCinema, setSelectedCinema] = useState('')
-
   // API - Lấy thông tin hệ thống rạp
   const { data } = useQuery({
     queryKey: ['get-info-cinema-system'],
@@ -41,7 +48,7 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
   })
 
   // Form - Tạo lịch chiếu
-  const { handleSubmit, register, control, setValue, watch } = useForm({
+  const { handleSubmit, register, control, setValue, getValues } = useForm({
     defaultValues: {
       maPhim: maPhim,
       ngayChieuGioChieu: '',
@@ -50,13 +57,19 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
     },
   })
 
-  useEffect(() => {
-    setValue('maRap', selectedCinema || '')
-  }, [selectedCinema, setValue])
+  const maHeThongRap = useWatch({ control, name: 'maHeThongRap' })
 
-  const handleCinemaChange = (value) => {
-    setSelectedCinema(value)
-  }
+  const { data: CinemaBySystem } = useQuery({
+    queryKey: ['get-info-cinema-by-system', maHeThongRap],
+    queryFn: () => {
+      if (maHeThongRap) {
+        return getInfoCinemaBySystem(maHeThongRap)
+      } else {
+        // Trả về dữ liệu rỗng nếu maRap không hợp lệ
+        return Promise.resolve([])
+      }
+    },
+  })
 
   const onSubmit = (values) => {
     // console.log('🚀  values:', values)
@@ -75,17 +88,66 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
           <Grid item md={6}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2} direction={'column'}>
-                <TextField select fullWidth label="Cụm rạp">
-                  {data?.map((system, index) => {
+                <Controller
+                  name="maHeThongRap"
+                  control={control}
+                  render={({ field }) => {
                     return (
-                      <CinemaComplex
-                        key={index}
-                        maHeThongRap={system.maHeThongRap}
-                        onCinemaChange={handleCinemaChange}
-                      />
+                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <InputLabel id="demo-simple-select-helper-label">
+                          Chọn rạp
+                        </InputLabel>
+                        <Select
+                          {...field}
+                          labelId="demo-simple-select-helper-label"
+                          id="demo-simple-select-helper"
+                          label="Cụm rạp"
+                        >
+                          {data?.map((item) => {
+                            return (
+                              <MenuItem
+                                key={item.maHeThongRap}
+                                value={item.maHeThongRap}
+                              >
+                                {item.tenHeThongRap}
+                              </MenuItem>
+                            )
+                          })}
+                        </Select>
+                      </FormControl>
                     )
-                  })}
-                </TextField>
+                  }}
+                />
+
+                <Controller
+                  name="maRap"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <InputLabel id="demo-simple-select-helper-label">
+                          Chọn cụm rạp
+                        </InputLabel>
+                        <Select
+                          {...field}
+                          labelId="demo-simple-select-helper-label"
+                          id="demo-simple-select-helper"
+                          label="Chọn cụm rạp"
+                          defaultValue={getValues('maRap')}
+                        >
+                          {CinemaBySystem?.map((item, index) => {
+                            return (
+                              <MenuItem key={index} value={item.maCumRap}>
+                                {item.tenCumRap}
+                              </MenuItem>
+                            )
+                          })}
+                        </Select>
+                      </FormControl>
+                    )
+                  }}
+                />
+
                 <Controller
                   control={control}
                   name="ngayChieuGioChieu"
