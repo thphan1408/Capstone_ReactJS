@@ -52,7 +52,7 @@ const notFound = () => {
 
           <Box
             component="img"
-            src="/public/illustrations/illustration_404.svg"
+            src="/src/assets/illustrations/illustration_404.svg"
             sx={{
               mx: 'auto',
               height: 260,
