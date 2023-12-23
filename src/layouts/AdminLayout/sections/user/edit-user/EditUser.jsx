@@ -22,7 +22,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
 import { GROUP_CODE } from '../../../../../constants'
 import Swal from 'sweetalert2'
-import { editUserApi } from '../../../../../apis/userAPI'
+import { editUserApi, infoUserAPI } from '../../../../../apis/userAPI'
 
 const editUser = ({ handleClose, taiKhoanUser }) => {
   console.log('taiKhoanUser: ', taiKhoanUser)
@@ -38,30 +38,50 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
       hoTen: '',
     },
   })
+  const [userEdit, setUserEdit] = useState(null)
+  useEffect(() => {
+    const userDetails = async () => {
+      return await infoUserAPI(taiKhoanUser)
+    }
+    userDetails()
+  }, [taiKhoanUser])
 
-  // useQuery({queryKey: ['list-movie-admin'] })
-  const { mutate: handleEditUser, isPending } = useMutation({
-    mutationFn: (payload) => {
-      editUserApi(payload)
-    },
-    onSuccess: () => {
-      handleClose()
+  // const { mutate: handleInfo } = useMutation({
+  //   mutationFn: (taiKhoanUser) => {
+  //     infoUserAPI(taiKhoanUser)
+  //   },
+  // })
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Cập nhật người dùng thành công',
-        confirmButtonText: 'Ok luôn',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          queryClient.invalidateQueries('get-list-user')
-        }
-      })
-    },
-  })
-  const onSubmit = (userInfor) => {
-    console.log('userInfor: ', userInfor)
-    // handleEditUser(userInfor)
-  }
+  // useEffect(() => {
+  //   // Set default values when data changes
+  //   setValue('taiKhoan', userDetails.taiKhoan || '')
+  //   setValue('matKhau', userDetails.matKhau || '')
+  //   setValue('email', userDetails.email || '')
+  //   setValue('soDt', userDetails.soDt || '')
+  //   setValue('maNhom', userDetails.maNhom || '')
+  //   setValue('maLoaiNguoiDung', userDetails.maLoaiNguoiDung || '')
+  //   setValue('hoTen', userDetails.hoTen || false)
+  // }, [userDetails, setValue, control])
+
+  // const { mutate: handleEditUser, isPending } = useMutation({
+  //   mutationFn: (payload) => {
+  //     editUserApi(payload)
+  //   },
+  //   onSuccess: () => {
+  //     handleClose()
+
+  //     Swal.fire({
+  //       icon: 'success',
+  //       title: 'Cập nhật người dùng thành công',
+  //       confirmButtonText: 'Ok luôn',
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         queryClient.invalidateQueries('get-list-user')
+  //       }
+  //     })
+  //   },
+  // })
+  // const onSubmit = (userInfor) => {}
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -73,7 +93,9 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
           spacing={3}
         >
           <Grid item md={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+            //  onSubmit={handleSubmit(onSubmit)}
+            >
               <Stack spacing={2} direction={'column'}>
                 <TextField
                   label="Tài khoản"
@@ -115,7 +137,7 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
                 />
 
                 <LoadingButton
-                  loading={isPending}
+                  // loading={isPending}
                   variant="contained"
                   size="large"
                   type="submit"

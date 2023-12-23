@@ -57,11 +57,17 @@ export const editUserApi = async (user) => {
     throw 'Lỗi rồi'
   }
 }
-export const infoUserAPI = async () => {
+export const infoUserAPI = async (userId) => {
   try {
-    const response = await fetcher.post('/QuanLyNguoiDung/ThongTinTaiKhoan')
-    // console.log("🚀  response:", response)
-
+    const response = await fetcher.post(
+      '/QuanLyNguoiDung/LayThongTinNguoiDung',
+      null,
+      {
+        params: {
+          taiKhoan: userId,
+        },
+      }
+    )
     return response.data.content
   } catch (error) {
     throw 'Lỗi rồi'
