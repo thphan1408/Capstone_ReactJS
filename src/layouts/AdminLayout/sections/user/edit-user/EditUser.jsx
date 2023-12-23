@@ -24,64 +24,51 @@ import { GROUP_CODE } from '../../../../../constants'
 import Swal from 'sweetalert2'
 import { editUserApi, infoUserAPI } from '../../../../../apis/userAPI'
 
-const editUser = ({ handleClose, taiKhoanUser }) => {
-  console.log('taiKhoanUser: ', taiKhoanUser)
+const editUser = ({ handleClose, userInfor }) => {
   const queryClient = useQueryClient()
   const { handleSubmit, register, control, setValue, watch } = useForm({
     defaultValues: {
-      taiKhoan: '',
-      matKhau: '',
-      email: '',
-      soDt: '',
+      taiKhoan: userInfor.taiKhoan || '',
+      matKhau: userInfor.matKhau || '',
+      email: userInfor.email || '',
+      soDt: userInfor.soDt || '',
       maNhom: GROUP_CODE,
-      maLoaiNguoiDung: '',
-      hoTen: '',
+      maLoaiNguoiDung: userInfor.maLoaiNguoiDung || '',
+      hoTen: userInfor.hoTen || '',
     },
   })
-  const [userEdit, setUserEdit] = useState(null)
+
   useEffect(() => {
-    const userDetails = async () => {
-      return await infoUserAPI(taiKhoanUser)
-    }
-    userDetails()
-  }, [taiKhoanUser])
+    setValue('matKhau', userInfor.matKhau || '')
+    setValue('email', userInfor.email || '')
+    setValue('soDt', userInfor.soDT || '')
+    setValue('maNhom', GROUP_CODE)
+    setValue('maLoaiNguoiDung', userInfor.maLoaiNguoiDung || '')
+    setValue('hoTen', userInfor.hoTen || '')
+  }, [userInfor, setValue, control])
 
-  // const { mutate: handleInfo } = useMutation({
-  //   mutationFn: (taiKhoanUser) => {
-  //     infoUserAPI(taiKhoanUser)
-  //   },
-  // })
+  const { mutate: handleEditUser, isPending } = useMutation({
+    mutationFn: (payload) => {
+      editUserApi(payload)
+    },
+    onSuccess: () => {
+      handleClose()
 
-  // useEffect(() => {
-  //   // Set default values when data changes
-  //   setValue('taiKhoan', userDetails.taiKhoan || '')
-  //   setValue('matKhau', userDetails.matKhau || '')
-  //   setValue('email', userDetails.email || '')
-  //   setValue('soDt', userDetails.soDt || '')
-  //   setValue('maNhom', userDetails.maNhom || '')
-  //   setValue('maLoaiNguoiDung', userDetails.maLoaiNguoiDung || '')
-  //   setValue('hoTen', userDetails.hoTen || false)
-  // }, [userDetails, setValue, control])
-
-  // const { mutate: handleEditUser, isPending } = useMutation({
-  //   mutationFn: (payload) => {
-  //     editUserApi(payload)
-  //   },
-  //   onSuccess: () => {
-  //     handleClose()
-
-  //     Swal.fire({
-  //       icon: 'success',
-  //       title: 'Cập nhật người dùng thành công',
-  //       confirmButtonText: 'Ok luôn',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         queryClient.invalidateQueries('get-list-user')
-  //       }
-  //     })
-  //   },
-  // })
-  // const onSubmit = (userInfor) => {}
+      Swal.fire({
+        icon: 'success',
+        title: 'Cập nhật người dùng thành công',
+        confirmButtonText: 'Ok luôn',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          queryClient.invalidateQueries('get-list-user')
+        }
+      })
+    },
+  })
+  const onSubmit = (userInfor) => {
+    console.log('userInfor submit: ', userInfor)
+    handleEditUser(userInfor)
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -93,13 +80,12 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
           spacing={3}
         >
           <Grid item md={6}>
-            <form
-            //  onSubmit={handleSubmit(onSubmit)}
-            >
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2} direction={'column'}>
                 <TextField
                   label="Tài khoản"
                   fullWidth
+                  disabled
                   {...register('taiKhoan')}
                 />
                 <TextField label="Họ tên" fullWidth {...register('hoTen')} />
@@ -137,7 +123,7 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
                 />
 
                 <LoadingButton
-                  // loading={isPending}
+                  loading={isPending}
                   variant="contained"
                   size="large"
                   type="submit"

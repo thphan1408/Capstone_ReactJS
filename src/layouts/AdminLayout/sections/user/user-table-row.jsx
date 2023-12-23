@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton'
 
 import Label from '../../components/label'
 import Iconify from '../../components/iconify'
-import { Button } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import ModalView from '../modal/modal'
 import UserEdit from '../user/edit-user'
 // ----------------------------------------------------------------------
@@ -28,6 +28,14 @@ export default function UserTableRow({
   maLoaiNguoiDung,
   handleClick,
 }) {
+  const userInfor = {
+    taiKhoan,
+    hoTen,
+    email,
+    soDT,
+    matKhau,
+    maLoaiNguoiDung,
+  }
   const [open, setOpen] = useState(null)
   const [openModal, setOpenModal] = useState(false)
   const handleOpenModal = () => setOpenModal(true)
@@ -56,7 +64,6 @@ export default function UserTableRow({
 
         <TableCell>{soDT}</TableCell>
 
-        <TableCell>{matKhau}</TableCell>
         <TableCell>{maLoaiNguoiDung}</TableCell>
 
         <TableCell align="right">
@@ -94,7 +101,7 @@ export default function UserTableRow({
         </MenuItem>
       </Popover>
       <ModalView open={openModal} handleClose={handleCloseModal}>
-        <UserEdit taiKhoanUser={taiKhoan} />
+        <UserEdit userInfor={userInfor} />
       </ModalView>
     </>
   )

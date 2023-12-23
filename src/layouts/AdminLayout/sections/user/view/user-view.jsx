@@ -146,7 +146,6 @@ export default function UserPage() {
                   { id: 'hoTen', label: 'Họ tên' },
                   { id: 'email', label: 'Email' },
                   { id: 'soDT', label: 'Số điện thoại' },
-                  { id: 'matKhau', label: 'Mật khẩu' },
                   { id: 'maLoaiNguoiDung', label: 'Mã loại người dùng' },
                   { id: '' },
                 ]}
