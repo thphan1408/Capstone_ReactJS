@@ -38,9 +38,30 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
       hoTen: '',
     },
   })
-  const userDetails = async (taiKhoanUser) => {
-    return await infoUserAPI(taiKhoanUser)
-  }
+  const [userEdit, setUserEdit] = useState(null)
+  useEffect(() => {
+    const userDetails = async () => {
+      return await infoUserAPI(taiKhoanUser)
+    }
+    userDetails()
+  }, [taiKhoanUser])
+
+  // const { mutate: handleInfo } = useMutation({
+  //   mutationFn: (taiKhoanUser) => {
+  //     infoUserAPI(taiKhoanUser)
+  //   },
+  // })
+
+  // useEffect(() => {
+  //   // Set default values when data changes
+  //   setValue('taiKhoan', userDetails.taiKhoan || '')
+  //   setValue('matKhau', userDetails.matKhau || '')
+  //   setValue('email', userDetails.email || '')
+  //   setValue('soDt', userDetails.soDt || '')
+  //   setValue('maNhom', userDetails.maNhom || '')
+  //   setValue('maLoaiNguoiDung', userDetails.maLoaiNguoiDung || '')
+  //   setValue('hoTen', userDetails.hoTen || false)
+  // }, [userDetails, setValue, control])
 
   // const { mutate: handleEditUser, isPending } = useMutation({
   //   mutationFn: (payload) => {
@@ -72,7 +93,9 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
           spacing={3}
         >
           <Grid item md={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+            //  onSubmit={handleSubmit(onSubmit)}
+            >
               <Stack spacing={2} direction={'column'}>
                 <TextField
                   label="Tài khoản"
@@ -114,7 +137,7 @@ const editUser = ({ handleClose, taiKhoanUser }) => {
                 />
 
                 <LoadingButton
-                  loading={isPending}
+                  // loading={isPending}
                   variant="contained"
                   size="large"
                   type="submit"
