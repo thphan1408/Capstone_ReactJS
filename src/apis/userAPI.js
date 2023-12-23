@@ -47,8 +47,7 @@ export const addUserApi = async (user) => {
 }
 export const editUserApi = async (user) => {
   try {
-    const { userId } = user
-    const response = await fetcher.put(
+    const response = await fetcher.post(
       '/QuanLyNguoiDung/CapNhatThongTinNguoiDung',
       user
     )
