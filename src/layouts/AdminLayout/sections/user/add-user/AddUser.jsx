@@ -76,7 +76,6 @@ const AddUser = ({ handleClose }) => {
                 <TextField
                   label="Tài khoản"
                   fullWidth
-                  disabled
                   {...register('taiKhoan')}
                 />
                 <TextField label="Họ tên" fullWidth {...register('hoTen')} />
