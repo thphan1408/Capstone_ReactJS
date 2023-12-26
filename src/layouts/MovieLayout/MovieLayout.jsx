@@ -10,7 +10,8 @@ const MovieLayout = () => {
       {/* <div className="container"> */}
       <Header />
       <Outlet />
-      <Footer />
+      {/* <Footer />
+       */}
       {/* </div> */}
     </>
   )
