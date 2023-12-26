@@ -3,7 +3,6 @@ import { Button, Typography, Box } from '@mui/material'
 import Child from './child'
 
 const Memo = () => {
-  console.log('parent re render')
   const [count, setCount] = useState(1)
   const [like, setLike] = useState(false)
   return (

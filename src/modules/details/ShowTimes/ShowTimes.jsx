@@ -55,11 +55,7 @@ const ShowTimes = ({ movieID }) => {
     enabled: !!movieID,
   })
 
-  // console.log('data show-times', data)
-
   const cinemaSystems = data.heThongRapChieu || []
-
-  // console.log('cinemaSystems', cinemaSystems)
 
   useEffect(() => {
     if (cinemaSystems.length > 0) {
@@ -102,20 +98,12 @@ const ShowTimes = ({ movieID }) => {
               index={item.maHeThongRap}
               key={item.maHeThongRap}
             >
-              {/*
-              display: flex
-              flex-direction: column
-              gap: 3 
-            */}
-              {/* <Stack direction="column" spacing={2}> */}
               {item.cumRapChieu.map((rap) => {
                 return (
                   <Box sx={{ mb: 3 }} key={rap.maCumRap}>
                     <Typography component="h4">{rap.tenCumRap}</Typography>
                     <Stack spacing={2} direction={'row'}>
                       {rap.lichChieuPhim.map((lichChieu) => {
-                        // const date = new Date(lichChieu.ngayChieuGioChieu)
-                        // const times = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()} ~ ${date.getHours()} - ${date.getMinutes()}` // dd/mm/yyyy ~ hh-mm
                         const times = dayjs(lichChieu.ngayChieuGioChieu).format(
                           'DD/MM/YYYY ~ HH:mm'
                         )
@@ -136,7 +124,6 @@ const ShowTimes = ({ movieID }) => {
                   </Box>
                 )
               })}
-              {/* </Stack> */}
             </TabPanel>
           )
         })}

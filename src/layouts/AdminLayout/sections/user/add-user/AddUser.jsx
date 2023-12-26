@@ -31,7 +31,7 @@ const AddUser = ({ handleClose }) => {
       taiKhoan: '',
       matKhau: '',
       email: '',
-      soDt: '',
+      soDT: '',
       maNhom: GROUP_CODE,
       maLoaiNguoiDung: '',
       hoTen: '',
@@ -40,8 +40,8 @@ const AddUser = ({ handleClose }) => {
 
   // useQuery({queryKey: ['list-movie-admin'] })
   const { mutate: handleAddUser, isPending } = useMutation({
-    mutationFn: (payload) => {
-      addUserApi(payload)
+    mutationFn: async (payload) => {
+      await addUserApi(payload)
     },
     onSuccess: () => {
       handleClose()
@@ -56,9 +56,31 @@ const AddUser = ({ handleClose }) => {
         }
       })
     },
+    onError: (error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thêm user thất bại',
+        text: error.response.data.content || 'Có lỗi xảy ra khi thêm user.',
+        confirmButtonText: 'Đồng ý',
+      })
+    },
   })
+  const handleSubmitAddUser = (userInfor) => {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Bạn có chắc chắn muốn thêm user này?',
+      confirmButtonText: 'Đồng ý',
+      showDenyButton: true,
+      denyButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleAddUser(userInfor)
+      }
+      return
+    })
+  }
   const onSubmit = (userInfor) => {
-    handleAddUser(userInfor)
+    handleSubmitAddUser(userInfor)
   }
 
   return (
@@ -84,7 +106,7 @@ const AddUser = ({ handleClose }) => {
                 <TextField
                   label="Số điện thoại"
                   fullWidth
-                  {...register('soDt')}
+                  {...register('soDT')}
                 />
 
                 <Controller

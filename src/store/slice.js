@@ -45,7 +45,7 @@ export const MovieBookingSlice = createSlice({
     },
 
     // payment: (state, { payload }) => {
-    //   console.log('payload: ', payload)
+    //   .log('payload: ', payload)
     // },
   },
 })
