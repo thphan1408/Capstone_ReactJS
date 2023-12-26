@@ -4,7 +4,6 @@ import fetcher from './fetcher'
 export const getBannersAPI = async () => {
   try {
     const response = await fetcher.get('/QuanLyPhim/LayDanhSachBanner')
-    // console.log('response', response)
     return response.data.content // []
   } catch (error) {}
 }
@@ -16,7 +15,6 @@ export const getListMovieAPI = async () => {
         maNhom: GROUP_CODE,
       },
     })
-    // console.log('response', response.data.content)
     return response.data.content
   } catch (error) {}
 }
@@ -28,7 +26,6 @@ export const getMovieDetailsAPI = async (movieID) => {
         MaPhim: movieID,
       },
     })
-    // console.log('response', response)
     return response.data.content
   } catch (error) {}
 }
@@ -40,7 +37,6 @@ export const addMovieAPI = async (payload) => {
       '/QuanLyPhim/ThemPhimUploadHinh',
       payload
     )
-    // console.log('🚀  response:', response)
     return response.data.content
   } catch (error) {
     throw 'Lỗi rồi'

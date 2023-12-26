@@ -16,10 +16,22 @@ export const getListUser = async () => {
     throw 'Lỗi'
   }
 }
+export const getListUserPagination = async (soTrang, soPhanTuTrenTrang) => {
+  const response = await fetcher.get(
+    '/QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang',
+    {
+      params: {
+        MaNhom: GROUP_CODE,
+        soTrang,
+        soPhanTuTrenTrang,
+      },
+    }
+  )
+
+  return response.data.content
+}
 export const signupAPI = async (payload) => {
   try {
-    // console.log(payload)
-    // payload: {taiKhoan: "", ...}
     const response = await fetcher.post('/QuanLyNguoiDung/DangKy', payload)
     return response.data.content
   } catch (error) {
@@ -30,7 +42,6 @@ export const signupAPI = async (payload) => {
 export const signinAPI = async (payload) => {
   try {
     const response = await fetcher.post('/QuanLyNguoiDung/DangNhap', payload)
-    // console.log('response: ', response)
     return response.data.content
   } catch (error) {
     throw 'Lỗi rồi'
@@ -38,23 +49,23 @@ export const signinAPI = async (payload) => {
 }
 
 export const addUserApi = async (user) => {
-  try {
-    const response = await fetcher.post('/QuanLyNguoiDung/ThemNguoiDung', user)
-    return response.data.content
-  } catch (error) {
-    throw 'Lỗi rồi'
-  }
+  const response = await fetcher.post('/QuanLyNguoiDung/ThemNguoiDung', user)
+  return response.data.content
 }
 export const editUserApi = async (user) => {
-  try {
-    const response = await fetcher.post(
-      '/QuanLyNguoiDung/CapNhatThongTinNguoiDung',
-      user
-    )
-    return response.data.content
-  } catch (error) {
-    throw 'Lỗi rồi'
-  }
+  const response = await fetcher.post(
+    '/QuanLyNguoiDung/CapNhatThongTinNguoiDung',
+    user
+  )
+  return response.data.content
+}
+export const deleteUserAPI = async (taiKhoan) => {
+  const response = await fetcher.delete('/QuanLyNguoiDung/XoaNguoiDung', {
+    params: {
+      TaiKhoan: taiKhoan,
+    },
+  })
+  return response.data.content
 }
 export const infoUserAPI = async (userId) => {
   try {
@@ -67,6 +78,7 @@ export const infoUserAPI = async (userId) => {
         },
       }
     )
+
     return response.data.content
   } catch (error) {
     throw 'Lỗi rồi'

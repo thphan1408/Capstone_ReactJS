@@ -14,10 +14,6 @@ const Banner = () => {
     queryFn: getBannersAPI,
   })
 
-  // console.log('Data', data)
-  // console.log('isLoading', isLoading)
-  // console.log('isError', isError)
-
   const settings = {
     // dots: true,
     infinite: true,

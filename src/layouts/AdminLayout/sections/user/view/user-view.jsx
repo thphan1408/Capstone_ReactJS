@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Card from '@mui/material/Card'
 import Stack from '@mui/material/Stack'
@@ -19,8 +19,8 @@ import UserTableHead from '../user-table-head'
 import TableEmptyRows from '../table-empty-rows'
 import UserTableToolbar from '../user-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
-import { useQuery } from '@tanstack/react-query'
-import { getListUser } from '../../../../../apis/userAPI'
+import { QueryClient, useQuery } from '@tanstack/react-query'
+import { getListUser, getListUserPagination } from '../../../../../apis/userAPI'
 import ModalView from '../../modal/modal'
 import AddUser from '../add-user'
 
@@ -43,11 +43,6 @@ export default function UserPage() {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
-  const { data: userList, isLoading } = useQuery({
-    queryKey: ['get-list-user'],
-    queryFn: () => getListUser(),
-  })
-
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc'
     if (id !== '') {
@@ -57,7 +52,7 @@ export default function UserPage() {
   }
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.taiKhoan)
+      const newSelecteds = data.map((n) => n.taiKhoan)
       setSelected(newSelecteds)
       return
     }
@@ -81,28 +76,39 @@ export default function UserPage() {
     }
     setSelected(newSelected)
   }
-
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
+    console.log('event: ', event)
+    setPage(newPage + 1)
   }
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = async (event) => {
     setPage(0)
     setRowsPerPage(parseInt(event.target.value, 10))
   }
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['get-user-pagination', page, rowsPerPage],
+    queryFn: () => getListUserPagination(page, rowsPerPage),
+    enabled: !!rowsPerPage,
+  })
+
+  const { data: userList } = useQuery({
+    queryKey: ['get-list-user'],
+    queryFn: async () => await getListUser(),
+  })
+  console.log('userList: ', userList)
 
   const handleFilterByName = (event) => {
     setPage(0)
     setFilterName(event.target.value)
   }
-
   const dataUser = applyFilter({
-    inputData: userList,
+    inputData: data?.items,
     comparator: getComparator(order, orderBy),
     filterName,
   })
 
-  const notFound = !userList?.length && !!filterName
+  const notFound = !data?.items.length && !!filterName
 
   return (
     <Container>
@@ -137,7 +143,7 @@ export default function UserPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={userList?.length}
+                rowCount={data?.items.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -146,7 +152,7 @@ export default function UserPage() {
                   { id: 'hoTen', label: 'Họ tên' },
                   { id: 'email', label: 'Email' },
                   { id: 'soDT', label: 'Số điện thoại' },
-                  { id: 'maLoaiNguoiDung', label: 'Mã loại người dùng' },
+                  { id: 'maLoaiNguoiDung', label: 'Loại người dùng' },
                   { id: '' },
                 ]}
               />
@@ -167,7 +173,7 @@ export default function UserPage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, userList?.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, data?.count)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -182,7 +188,7 @@ export default function UserPage() {
           count={userList?.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 20, 50]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
