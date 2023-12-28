@@ -1,3 +1,4 @@
+import React, {lazy} from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HomeModule from './modules/home'
 import NotFound from './modules/not-found'
@@ -16,7 +17,8 @@ import AdminPage from './layouts/AdminLayout/App.jsx'
 import NotFoundPage from './layouts/AdminLayout/sections/error/not-found-view.jsx'
 import UserPage from './layouts/AdminLayout/pages/user.jsx'
 import ThemeProvider from './theme'
-import ListMovie from './layouts/AdminLayout/pages/list-movie.jsx'
+// import ListMovie from './layouts/AdminLayout/pages/list-movie.jsx'
+const ListMovie = lazy(() => import('./layouts/AdminLayout/pages/list-movie.jsx'))
 
 function App() {
   return (
@@ -37,7 +39,7 @@ function App() {
               <Route path="user" element={<UserPage />} />
               {/* <Route path="add-movie" element={<MoviePage />} /> */}
               <Route path="list-movie" element={<ListMovie />} />
-              <Route path="404" element={<NotFoundPage />} />
+              {/* <Route path="404" element={<NotFoundPage />} /> */}
             </Route>
 
             <Route path="*" element={<NotFound />}></Route>

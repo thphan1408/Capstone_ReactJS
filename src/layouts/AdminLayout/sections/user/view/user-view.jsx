@@ -77,7 +77,6 @@ export default function UserPage() {
     setSelected(newSelected)
   }
   const handleChangePage = (event, newPage) => {
-    console.log('event: ', event)
     setPage(newPage + 1)
   }
 
@@ -96,7 +95,6 @@ export default function UserPage() {
     queryKey: ['get-list-user'],
     queryFn: async () => await getListUser(),
   })
-  console.log('userList: ', userList)
 
   const handleFilterByName = (event) => {
     setPage(0)

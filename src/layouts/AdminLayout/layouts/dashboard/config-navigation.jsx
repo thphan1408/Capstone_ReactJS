@@ -28,11 +28,11 @@ const navConfig = [
     title: 'Danh sách phim',
     path: 'list-movie',
   },
-  {
-    title: 'Not found',
-    path: '404',
-    // icon: icon('ic_disabled'),
-  },
+  // {
+  //   title: 'Not found',
+  //   path: '404',
+  //   // icon: icon('ic_disabled'),
+  // },
 ]
 
 export default navConfig
