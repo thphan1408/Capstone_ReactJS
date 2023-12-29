@@ -19,7 +19,7 @@ import UserTableHead from '../user-table-head'
 import TableEmptyRows from '../table-empty-rows'
 import UserTableToolbar from '../user-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
-import { QueryClient, useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getListUser, getListUserPagination } from '../../../../../apis/userAPI'
 import ModalView from '../../modal/modal'
 import AddUser from '../add-user'
@@ -27,6 +27,8 @@ import AddUser from '../add-user'
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
+  const queryClient = useQueryClient()
+
   const [page, setPage] = useState(0)
 
   const [order, setOrder] = useState('asc')
@@ -78,8 +80,8 @@ export default function UserPage() {
   }
 
   const handleChangePage = (event, newPage) => {
-    setPrevPage(page - 1)
     setPage(newPage + 1)
+    queryClient.invalidateQueries('get-user-pagination')
   }
 
   const handleChangeRowsPerPage = async (event) => {
@@ -90,7 +92,13 @@ export default function UserPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['get-user-pagination', page, rowsPerPage],
-    queryFn: () => getListUserPagination(page, rowsPerPage),
+
+    queryFn: () => {
+      console.log('abchaduahdu')
+      console.log('rowsPerPage: ', rowsPerPage)
+      console.log('page: ', page)
+      return getListUserPagination(page, rowsPerPage)
+    },
     enabled: !!rowsPerPage,
   })
 
@@ -135,6 +143,7 @@ export default function UserPage() {
           filterName={filterName}
           onFilterName={handleFilterByName}
         />
+            
         <TableContainer sx={{ overflow: 'unset' }}>
           <Table sx={{ minWidth: 800 }}>
             <UserTableHead
