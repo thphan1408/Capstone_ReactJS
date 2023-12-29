@@ -19,7 +19,7 @@ import UserTableHead from '../user-table-head'
 import TableEmptyRows from '../table-empty-rows'
 import UserTableToolbar from '../user-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
-import { QueryClient, useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getListUser, getListUserPagination } from '../../../../../apis/userAPI'
 import ModalView from '../../modal/modal'
 import AddUser from '../add-user'
@@ -27,6 +27,8 @@ import AddUser from '../add-user'
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
+  const queryClient = useQueryClient()
+
   const [page, setPage] = useState(0)
 
   const [order, setOrder] = useState('asc')
@@ -77,7 +79,10 @@ export default function UserPage() {
     setSelected(newSelected)
   }
   const handleChangePage = (event, newPage) => {
+    console.log('newPage: ', newPage)
+
     setPage(newPage + 1)
+    queryClient.invalidateQueries('get-user-pagination')
   }
 
   const handleChangeRowsPerPage = async (event) => {
@@ -87,7 +92,13 @@ export default function UserPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['get-user-pagination', page, rowsPerPage],
-    queryFn: () => getListUserPagination(page, rowsPerPage),
+
+    queryFn: () => {
+      console.log('abchaduahdu')
+      console.log('rowsPerPage: ', rowsPerPage)
+      console.log('page: ', page)
+      return getListUserPagination(page, rowsPerPage)
+    },
     enabled: !!rowsPerPage,
   })
 
@@ -155,26 +166,21 @@ export default function UserPage() {
                 ]}
               />
               <TableBody>
-                {dataUser?.map((user, index) => (
-                  <UserTableRow
-                    key={index}
-                    taiKhoan={user.taiKhoan}
-                    hoTen={user.hoTen}
-                    email={user.email}
-                    soDT={user.soDT}
-                    matKhau={user.matKhau}
-                    maLoaiNguoiDung={user.maLoaiNguoiDung}
-                    selected={selected.indexOf(user.taiKhoan) !== -1}
-                    handleClick={(event) => handleClick(event, user.taiKhoan)}
-                  />
-                ))}
-
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, data?.count)}
-                />
-
-                {notFound && <TableNoData query={filterName} />}
+                {dataUser
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((user, index) => (
+                    <UserTableRow
+                      key={index}
+                      taiKhoan={user.taiKhoan}
+                      hoTen={user.hoTen}
+                      email={user.email}
+                      soDT={user.soDT}
+                      matKhau={user.matKhau}
+                      maLoaiNguoiDung={user.maLoaiNguoiDung}
+                      selected={selected.indexOf(user.taiKhoan) !== -1}
+                      handleClick={(event) => handleClick(event, user.taiKhoan)}
+                    />
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
