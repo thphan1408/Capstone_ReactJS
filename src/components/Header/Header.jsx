@@ -24,10 +24,13 @@ import {
   useHistoryTicket,
 } from '../../contexts/UserContext/UserContext'
 import { useMutation } from '@tanstack/react-query'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 const Header = () => {
+  const isSmallScreen = useMediaQuery('(max-width:600px)')
+
   const navigate = useNavigate()
   const { currentUser, handleLogout } = useAuth()
   const { setValuesData } = useHistoryTicket()
@@ -56,9 +59,7 @@ const Header = () => {
       navigate(PATH.HISTORY_TICKET)
       setValuesData(values)
     },
-    onError: (error) => {
-      console.log('🚀  error:', error)
-    },
+    onError: (error) => {},
   })
 
   const handleHistory = () => {
@@ -113,23 +114,103 @@ const Header = () => {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {/* {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))} */}
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      textAlign: 'justify',
-                    }}
-                  >
-                    <Link> Lịch chiếu phim</Link>
-                    <Link> Cụm rạp</Link>
-                    <Link> Về chúng tôi</Link>
-                  </Box>
+                  <Stack direction={'column'}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        textAlign: 'justify',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        my: 2,
+                      }}
+                    >
+                      <Link>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: '1.1rem',
+                            color: 'rgb(2, 132, 199)',
+                          }}
+                        >
+                          {' '}
+                          Lịch chiếu phim
+                        </Typography>
+                      </Link>
+                      <Link>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: '1.1rem',
+                            color: 'rgb(2, 132, 199)',
+                          }}
+                        >
+                          Cụm rạp
+                        </Typography>
+                      </Link>
+                      <Link>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: '1.1rem',
+                            color: 'rgb(2, 132, 199)',
+                          }}
+                        >
+                          Về chúng tôi
+                        </Typography>
+                      </Link>
+                    </Box>
+                    <Box>
+                      {currentUser ? (
+                        <Stack
+                          direction={'row'}
+                          spacing={2}
+                          alignItems={'center'}
+                        >
+                          <LoadingButton
+                            loading={isPending}
+                            onClick={handleHistory}
+                          >
+                            {currentUser.hoTen}
+                          </LoadingButton>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => {
+                              handleLogout()
+                              navigate(PATH.HOME)
+                            }}
+                            sx={{ display: isSmallScreen ? 'block' : 'none' }}
+                          >
+                            Đăng xuất
+                          </Button>
+                        </Stack>
+                      ) : (
+                        <Stack
+                          spacing={2}
+                          direction="row"
+                          sx={{ display: isSmallScreen ? 'block' : 'none' }}
+                        >
+                          <Button
+                            variant="outlined"
+                            onClick={() => navigate(PATH.SIGN_UP)}
+                          >
+                            Đăng ký
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={() => navigate(PATH.SIGN_IN)}
+                          >
+                            Đăng nhập
+                          </Button>
+                        </Stack>
+                      )}
+                    </Box>
+                  </Stack>
                 </MenuItem>
               </Menu>
             </Box>
@@ -184,13 +265,15 @@ const Header = () => {
             </Box>
 
             {currentUser ? (
-              <Stack direction={'row'} spacing={2} alignItems={'center'}>
+              <Stack
+                direction={'row'}
+                spacing={2}
+                alignItems={'center'}
+                sx={{ display: isSmallScreen ? 'none' : 'flex' }}
+              >
                 <LoadingButton loading={isPending} onClick={handleHistory}>
                   {currentUser.hoTen}
                 </LoadingButton>
-                {/* <Link to={PATH.HISTORY_TICKET} >
-                {currentUser.hoTen}
-              </Link> */}
                 <Button
                   size="small"
                   variant="contained"
@@ -198,12 +281,17 @@ const Header = () => {
                     handleLogout()
                     navigate(PATH.HOME)
                   }}
+                  sx={{ display: isSmallScreen ? 'none' : 'block' }}
                 >
                   Đăng xuất
                 </Button>
               </Stack>
             ) : (
-              <Stack spacing={2} direction="row">
+              <Stack
+                spacing={2}
+                direction="row"
+                sx={{ display: isSmallScreen ? 'none' : 'block' }}
+              >
                 <Button
                   variant="outlined"
                   onClick={() => navigate(PATH.SIGN_UP)}

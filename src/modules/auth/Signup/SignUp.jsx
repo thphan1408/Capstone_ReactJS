@@ -74,16 +74,6 @@ const SignUp = () => {
     },
   })
 
-  // const field = register('taiKhoan')
-
-  // const handleSubmit = () => {
-  // do something
-  // const innerFunction = () => {}
-  // return innerFunction
-  // }
-
-  // const fn = handleSubmit()()
-
   const onSubmit = (values) => {
     // Gọi API
     handleSignup(values)

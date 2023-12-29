@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton'
 
 import Label from '../../components/label'
 import Iconify from '../../components/iconify'
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteMovieAPI } from '../../../../apis/movieAPI'
 import Swal from 'sweetalert2'
@@ -101,14 +101,12 @@ export default function MovieTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell width={100}>{maPhim}</TableCell>
+        <TableCell>{maPhim}</TableCell>
 
         <TableCell>
-          <img
-            src={hinhAnh}
-            alt={tenPhim}
-            style={{ width: 550, height: 100 }}
-          />
+          <Box sx={{ minWidth: '100%', minHeight: '100% ' }}>
+            <img src={hinhAnh} alt={tenPhim} />
+          </Box>
         </TableCell>
 
         <TableCell>{tenPhim}</TableCell>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  Box,
   Button,
   Card,
   Container,
@@ -104,8 +105,6 @@ const ListMovieView = () => {
     filterName,
   })
 
-  const notFound = !ListMovie?.length && !!filterName
-
   return (
     <>
       <Container>
@@ -134,26 +133,28 @@ const ListMovieView = () => {
             onFilterName={handleFilterByName}
           />
 
-          <Scrollbar>
-            <TableContainer sx={{ overflow: 'unset' }}>
-              <Table sx={{ minWidth: 800 }}>
-                <MovieTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  rowCount={ListMovie?.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleSort}
-                  onSelectAllClick={handleSelectAllClick}
-                  headLabel={[
-                    { id: 'maPhim', label: 'Mã phim' },
-                    { id: 'hinhAnh', label: 'Hình ảnh' },
-                    { id: 'tenPhim', label: 'Tên phim' },
-                    { id: 'moTa', label: 'Mô tả' },
-                    { id: '' },
-                  ]}
-                />
-                <TableBody>
-                  {dataMovie?.map((movie, index) => (
+          {/* <Scrollbar> */}
+          <TableContainer sx={{ overflow: 'scrollbar' }}>
+            <Table sx={{ minWidth: 800 }}>
+              <MovieTableHead
+                order={order}
+                orderBy={orderBy}
+                rowCount={ListMovie?.length}
+                numSelected={selected.length}
+                onRequestSort={handleSort}
+                onSelectAllClick={handleSelectAllClick}
+                headLabel={[
+                  { id: 'maPhim', label: 'Mã phim' },
+                  { id: 'hinhAnh', label: 'Hình ảnh' },
+                  { id: 'tenPhim', label: 'Tên phim' },
+                  { id: 'moTa', label: 'Mô tả' },
+                  { id: '' },
+                ]}
+              />
+              <TableBody>
+                {dataMovie
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((movie, index) => (
                     <MovieTableRow
                       key={index}
                       maPhim={movie.maPhim}
@@ -165,21 +166,21 @@ const ListMovieView = () => {
                     />
                   ))}
 
-                  {/* <TableEmptyRows
+                {/* <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, ListMovie?.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />} */}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Scrollbar>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* </Scrollbar> */}
 
           <TablePagination
-            page={page}
+            page={page || 0}
             component="div"
-            count={ListMovie?.length}
+            count={ListMovie?.length || 0}
             rowsPerPage={rowsPerPage}
             onPageChange={handleChangePage}
             rowsPerPageOptions={[5, 10, 25]}

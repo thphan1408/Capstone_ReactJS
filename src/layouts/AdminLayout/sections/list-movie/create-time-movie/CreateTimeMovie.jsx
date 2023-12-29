@@ -13,6 +13,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { useForm, Controller, useWatch } from 'react-hook-form'
 import dayjs from 'dayjs'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { LoadingButton } from '@mui/lab'
 import Swal from 'sweetalert2'
@@ -22,6 +24,18 @@ import {
 } from '../../../../../apis/cinemaAPI'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import { createTimeAPI } from '../../../../../apis/ticketAPI'
+
+const schemaCreateTime = yup.object({
+  maHeThongRap: yup.string().required('Vui lòng chọn hệ thống rạp'),
+  maRap: yup.string().required('Vui lòng chọn cụm rạp'),
+  giaVe: yup
+    // ngayChieuGioChieu: yup.date().required('Vui lòng cho biết ngày chiếu'),
+    .number()
+    .required('Vui lòng nhập giá vé')
+    .min(75000)
+    .max(200000)
+    .typeError('Giá vé phải là số'),
+})
 
 const CreateTimeMovie = ({ maPhim, handleClose }) => {
   // API - Lấy thông tin hệ thống rạp
@@ -37,24 +51,39 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
     },
     onSuccess: () => {
       handleClose()
-
-      // Hiển thị thông báo thành công
       Swal.fire({
         icon: 'success',
         title: 'Tạo lịch thành công',
         confirmButtonText: 'Ok luôn',
       })
     },
+    onError: (error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Có lỗi xảy ra khi tạo lịch',
+        confirmButtonText: 'Đồng ý',
+      })
+    },
   })
 
   // Form - Tạo lịch chiếu
-  const { handleSubmit, register, control, setValue, getValues } = useForm({
+  const {
+    handleSubmit,
+    register,
+    control,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       maPhim: maPhim,
       ngayChieuGioChieu: '',
       giaVe: '',
       maRap: '',
     },
+    mode: 'all',
+    resolver: yupResolver(schemaCreateTime),
   })
 
   const maHeThongRap = useWatch({ control, name: 'maHeThongRap' })
@@ -65,14 +94,12 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
       if (maHeThongRap) {
         return getInfoCinemaBySystem(maHeThongRap)
       } else {
-        // Trả về dữ liệu rỗng nếu maRap không hợp lệ
         return Promise.resolve([])
       }
     },
   })
 
   const onSubmit = (values) => {
-    // console.log('🚀  values:', values)
     handleCreateTime(values)
   }
 
@@ -175,8 +202,24 @@ const CreateTimeMovie = ({ maPhim, handleClose }) => {
                     )
                   }}
                 />
+                {/* <span
+                  style={{
+                    color: '#FF5630',
+                    fontSize: '12px',
+                    margin: '3px 14px 0px',
+                  }}
+                >
+                  {errors.ngayChieuGioChieu?.message}
+                </span> */}
 
-                <TextField label="Giá vé" fullWidth {...register('giaVe')} />
+                <TextField
+                  label="Giá vé"
+                  type="number"
+                  error={Boolean(errors.giaVe)}
+                  helperText={Boolean(errors.giaVe) && errors.giaVe.message}
+                  fullWidth
+                  {...register('giaVe')}
+                />
 
                 <LoadingButton variant="contained" size="large" type="submit">
                   Tạo lịch chiếu

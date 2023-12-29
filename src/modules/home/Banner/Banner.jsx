@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import { getBannersAPI } from '../../../apis/movieAPI'
 import Carousel from 'react-material-ui-carousel'
-import { Box, Skeleton } from '@mui/material'
+import { Box, Skeleton, useMediaQuery } from '@mui/material'
 const Banner = () => {
   const {
     data = [],
@@ -13,6 +13,7 @@ const Banner = () => {
     queryKey: ['banner'],
     queryFn: getBannersAPI,
   })
+  const isSmallScreen = useMediaQuery('(max-width:600px)')
 
   const settings = {
     // dots: true,
@@ -28,7 +29,7 @@ const Banner = () => {
     return (
       <Skeleton
         variant="rectangular"
-        sx={{ height: 'auto' }}
+        sx={{ height: isSmallScreen ? '200px' : '400px' }}
         animation="wave"
       ></Skeleton>
     )
@@ -41,7 +42,7 @@ const Banner = () => {
           <Box
             key={item.maBanner}
             style={{
-              minHeight: '400px',
+              minHeight: isSmallScreen ? '200px' : '400px',
               objectFit: 'cover',
             }}
           >
