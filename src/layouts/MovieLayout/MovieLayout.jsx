@@ -7,12 +7,9 @@ import { Helmet } from 'react-helmet-async'
 const MovieLayout = () => {
   return (
     <>
-      {/* <div className="container"> */}
       <Header />
       <Outlet />
-      {/* <Footer />
-       */}
-      {/* </div> */}
+      {/* <Footer /> */}
     </>
   )
 }

@@ -12,130 +12,79 @@ import {
   Grid,
   Typography,
   Container,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 
 const Showing = () => {
   const navigate = useNavigate()
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const isTabletScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['list-movie'],
     queryFn: getListMovieAPI,
   })
+
   const settings = {
     className: 'center',
     centerMode: true,
     infinite: true,
     autoplay: true,
     centerPadding: '60px',
-    slidesToShow: 3,
+    slidesToShow: isSmallScreen ? 1 : isTabletScreen ? 2 : 3,
     speed: 500,
     autoplaySpeed: 2000,
   }
 
   return (
-    // <Grid container spacing={4}>
-    //   {data?.map((item) => {
-    //     return (
-    //       <Grid item xs={3} key={item.maPhim}>
-    //         <Card>
-    //           <CardMedia
-    //             sx={{ height: 180 }}
-    //             image={item.hinhAnh}
-    //             title={item.tenPhim}
-    //           />
-    //           <CardContent>
-    //             <Typography
-    //               gutterBottom
-    //               variant="h5"
-    //               component="div"
-    //               className="truncate"
-    //             >
-    //               {item.tenPhim}
-    //             </Typography>
-    //             <Typography
-    //               variant="body2"
-    //               color="text.secondary"
-    //               className="truncate truncate--2"
-    //             >
-    //               {item.moTa}
-    //             </Typography>
-    //           </CardContent>
-    //           <CardActions>
-    //             <Button
-    //               size="large"
-    //               variant="contained"
-    //               fullWidth
-    //               onClick={() => {
-    //                 navigate(`movie/${item.maPhim}`)
-    //               }}
-    //             >
-    //               Xem chi tiết
-    //             </Button>
-    //           </CardActions>
-    //         </Card>
-    //       </Grid>
-    //     )
-    //   })}
-    // </Grid>
     <Container maxWidth="lg">
       <Slider {...settings}>
-        {data?.map((item) => {
-          return (
-            <Grid sx={{ padding: '10px' }} key={item.maPhim}>
-              <Grid item>
-                <Card sx={{ width: 314 }}>
-                  {/* <CardMedia
-                    sx={{
-                      minHeight: '100%',
-                      width: '100%',
-                    }}
-                    image={item.hinhAnh}
-                    title={item.tenPhim}
-                  /> */}
-                  <img
-                    src={item.hinhAnh}
-                    alt={item.tenPhim}
-                    style={{
-                      height: '314px',
-                      width: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                    }}
-                  />
-                  <CardContent>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="div"
-                      className="truncate"
-                    >
-                      {item.tenPhim}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      className="truncate truncate--2"
-                    >
-                      {item.moTa}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="large"
-                      variant="contained"
-                      fullWidth
-                      onClick={() => {
-                        navigate(`movie/${item.maPhim}`)
-                      }}
-                    >
-                      Xem chi tiết
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            </Grid>
-          )
-        })}
+        {data?.map((item) => (
+          <Grid item key={item.maPhim} sx={{ p: isTabletScreen ? 1 : 1 }}>
+            <Card sx={{ width: isTabletScreen ? '100%' : '100%' }}>
+              <CardMedia
+                component="img"
+                height={isSmallScreen ? 'auto' : isTabletScreen ? 200 : 314}
+                image={item.hinhAnh}
+                alt={item.tenPhim}
+                style={{
+                  objectFit: 'cover',
+                  display: 'block',
+                  height: isTabletScreen ? '300px' : '550px',
+                }}
+              />
+              <CardContent>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  className="truncate"
+                >
+                  {item.tenPhim}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  className="truncate truncate--2"
+                >
+                  {item.moTa}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  size="large"
+                  variant="contained"
+                  fullWidth
+                  onClick={() => navigate(`movie/${item.maPhim}`)}
+                >
+                  Xem chi tiết
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
       </Slider>
     </Container>
   )

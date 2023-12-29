@@ -22,6 +22,8 @@ import { LoadingButton } from '@mui/lab'
 import { GROUP_CODE } from '../../../../../constants'
 import { addMovieAPI } from '../../../../../apis/movieAPI'
 import Swal from 'sweetalert2'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -35,9 +37,24 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
+const schemaAddMovie = yup.object({
+  tenPhim: yup.string().required('Vui lòng nhập thông tin'),
+  trailer: yup.string().required('Vui lòng nhập thông tin'),
+  moTa: yup.string().required('Vui lòng nhập thông tin'),
+  danhGia: yup.number().required('Vui lòng chọn đánh giá'),
+  hinhAnh: yup.mixed().required('Vui lòng chọn hình ảnh'),
+})
+
 const AddMovie = ({ handleClose }) => {
   const queryClient = useQueryClient()
-  const { handleSubmit, register, control, setValue, watch } = useForm({
+  const {
+    handleSubmit,
+    register,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       tenPhim: '',
       trailer: '',
@@ -50,11 +67,12 @@ const AddMovie = ({ handleClose }) => {
       danhGia: '',
       hinhAnh: undefined,
     },
+    mode: 'all',
+    resolver: yupResolver(schemaAddMovie),
   })
 
   const file = watch('hinhAnh') // [0]
 
-  // useQuery({queryKey: ['list-movie-admin'] })
   const { mutate: handleAddMovie, isPending } = useMutation({
     mutationFn: (payload) => {
       addMovieAPI(payload)
@@ -62,7 +80,6 @@ const AddMovie = ({ handleClose }) => {
     onSuccess: () => {
       handleClose()
 
-      // Hiển thị thông báo thành công (nếu cần)
       Swal.fire({
         icon: 'success',
         title: 'Thêm phim thành công',
@@ -77,15 +94,6 @@ const AddMovie = ({ handleClose }) => {
 
   const onSubmit = (values) => {
     const formData = new FormData()
-    // formData.append('tenPhim', values.tenPhim)
-    // formData.append('trailer', values.trailer)
-    // formData.append('moTa', values.moTa)
-    // formData.append('maNhom', values.maNhom)
-    // formData.append('sapChieu', values.sapChieu)
-    // formData.append('dangChieu', values.dangChieu)
-    // formData.append('hot', values.hot)
-    // formData.append('danhGia', values.danhGia)
-    // formData.append('File', values.hinhAnh[0])
     for (const key in values) {
       if (key !== 'hinhAnh') {
         formData.append(key, values[key])
@@ -93,132 +101,128 @@ const AddMovie = ({ handleClose }) => {
         formData.append('file', values.hinhAnh[0], values.hinhAnh.name)
       }
     }
-    handleAddMovie(formData)
+    console.log('🚀  formData:', formData)
+    // handleAddMovie(formData)
   }
 
   const previewImage = (file) => {
     return URL.createObjectURL(file)
   }
 
-  // useEffect(() => {
-  //   if (file?.length > 0) {
-  //     previewImage(file?.[0]) // url
-  //   }
-  // }, [file])
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box>
-        <Grid
-          container
-          justifyContent={'center'}
-          alignItems={'center'}
-          spacing={3}
-        >
-          <Grid item md={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack spacing={2} direction={'column'}>
+      <Box sx={{ overflowY: 'auto', maxHeight: '80vh' }}>
+        <Grid container justifyContent="center">
+          <Grid item xs={12} md={8}>
+            <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 10 }}>
+              <Stack spacing={2}>
                 <TextField
                   label="Tên phim"
                   fullWidth
+                  error={Boolean(errors.tenPhim)}
+                  helperText={errors.tenPhim?.message}
                   {...register('tenPhim')}
                 />
-                <TextField label="Trailer" fullWidth {...register('trailer')} />
-                <TextField label="Mô tả" fullWidth {...register('moTa')} />
+                <TextField
+                  label="Trailer"
+                  fullWidth
+                  error={Boolean(errors.trailer)}
+                  helperText={errors.trailer?.message}
+                  {...register('trailer')}
+                />
+                <TextField
+                  label="Mô tả"
+                  error={Boolean(errors.moTa)}
+                  helperText={errors.moTa?.message}
+                  fullWidth
+                  {...register('moTa')}
+                />
                 <Controller
                   control={control}
                   name="ngayKhoiChieu"
-                  render={(field) => {
-                    return (
-                      <DatePicker
-                        label="Ngày chiếu"
-                        format="DD/MM/YYYY"
-                        onChange={(date) => {
-                          const value = dayjs(date).format('DD/MM/YYYY')
-                          setValue('ngayKhoiChieu', value)
-                        }}
-                        {...field}
-                      />
-                    )
-                  }}
+                  render={(field) => (
+                    <DatePicker
+                      label="Ngày chiếu"
+                      format="DD/MM/YYYY"
+                      onChange={(date) => {
+                        const value = dayjs(date).format('DD/MM/YYYY')
+                        setValue('ngayKhoiChieu', value)
+                      }}
+                      {...field}
+                    />
+                  )}
                 />
 
-                <Stack direction={'row'} spacing={1}>
-                  <Typography component={'h2'}>Đánh giá:</Typography>
+                <Stack direction="row" spacing={1}>
+                  <Typography component="h2">Đánh giá:</Typography>
                   <Controller
                     control={control}
                     name="danhGia"
-                    render={() => {
-                      return (
-                        <Rating
-                          name="size-medium"
-                          defaultValue={0}
-                          max={10}
-                          onChange={(event) => {
-                            setValue('danhGia', event.target.defaultValue)
-                          }}
-                        />
-                      )
-                    }}
+                    render={() => (
+                      <Rating
+                        error={Boolean(errors.danhGia)}
+                        helperText={errors.danhGia?.message}
+                        name="size-medium"
+                        defaultValue={0}
+                        max={10}
+                        onChange={(event) => {
+                          setValue('danhGia', event.target.defaultValue)
+                        }}
+                      />
+                    )}
                   />
                 </Stack>
 
-                <Stack direction={'row'} spacing={1}>
-                  <Typography component={'h2'}>Đang chiếu:</Typography>
+                <Stack direction="row" spacing={1}>
+                  <Typography component="h2">Đang chiếu:</Typography>
                   <Controller
                     control={control}
                     name="dangChieu"
-                    render={() => {
-                      return (
-                        <Switch
-                          checked={watch('dangChieu')}
-                          onChange={(event) => {
-                            setValue('dangChieu', event.target.checked)
-                            setValue('sapChieu', !event.target.checked)
-                          }}
-                        />
-                      )
-                    }}
+                    render={() => (
+                      <Switch
+                        checked={watch('dangChieu')}
+                        onChange={(event) => {
+                          setValue('dangChieu', event.target.checked)
+                          setValue('sapChieu', !event.target.checked)
+                        }}
+                      />
+                    )}
                   />
                 </Stack>
 
-                <Stack direction={'row'} spacing={1}>
-                  <Typography component={'h2'}>Sắp chiếu:</Typography>
+                <Stack direction="row" spacing={1}>
+                  <Typography component="h2">Sắp chiếu:</Typography>
                   <Controller
                     control={control}
                     name="sapChieu"
-                    render={() => {
-                      return (
-                        <Switch
-                          checked={watch('sapChieu')}
-                          onChange={(event) => {
-                            setValue('sapChieu', event.target.checked)
-                            setValue('dangChieu', !event.target.checked)
-                          }}
-                        />
-                      )
-                    }}
+                    render={() => (
+                      <Switch
+                        checked={watch('sapChieu')}
+                        onChange={(event) => {
+                          setValue('sapChieu', event.target.checked)
+                          setValue('dangChieu', !event.target.checked)
+                        }}
+                      />
+                    )}
                   />
                 </Stack>
 
-                <Stack direction={'row'} spacing={1}>
-                  <Typography component={'h2'}>Phim hot:</Typography>
+                <Stack direction="row" spacing={1}>
+                  <Typography component="h2">Phim hot:</Typography>
                   <Controller
                     control={control}
                     name="hot"
-                    render={() => {
-                      return (
-                        <Switch
-                          onChange={(event) => {
-                            setValue('hot', event.target.checked)
-                          }}
-                        />
-                      )
-                    }}
+                    render={() => (
+                      <Switch
+                        onChange={(event) => {
+                          setValue('hot', event.target.checked)
+                        }}
+                      />
+                    )}
                   />
                 </Stack>
 
-                {(!file || file.length === 0) && (
+                {!file || file.length === 0 ? (
                   <Button
                     component="label"
                     variant="contained"
@@ -229,11 +233,11 @@ const AddMovie = ({ handleClose }) => {
                       accept=".png, .gif, .jpg"
                       type="file"
                       {...register('hinhAnh')}
+                      error={Boolean(errors.hinhAnh)}
+                      helperText={errors.hinhAnh?.message}
                     />
                   </Button>
-                )}
-
-                {file?.length > 0 && (
+                ) : (
                   <>
                     <Box
                       sx={{

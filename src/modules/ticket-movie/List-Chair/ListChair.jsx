@@ -1,8 +1,18 @@
 import React from 'react'
 import Chair from './Chair'
 import { useQuery } from '@tanstack/react-query'
-import { Container, Box, Typography, Stack, Grid } from '@mui/material'
+import {
+  Container,
+  Box,
+  Typography,
+  Stack,
+  Grid,
+  useMediaQuery,
+} from '@mui/material'
 const ListChair = ({ chair }) => {
+  const isSmallScreen = useMediaQuery('(max-width:600px)')
+  const isTabletScreen = useMediaQuery('(max-width:960px)')
+
   return (
     <Box>
       <Box
@@ -21,7 +31,11 @@ const ListChair = ({ chair }) => {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(16, 1fr)',
+          gridTemplateColumns: isSmallScreen
+            ? 'repeat(8, 1fr)'
+            : isTabletScreen
+            ? 'repeat(12, 1fr)'
+            : 'repeat(16, 1fr)',
           gap: '10px',
         }}
       >
@@ -30,44 +44,58 @@ const ListChair = ({ chair }) => {
             return <Chair ghe={ghe} key={ghe.maGhe} />
           })}
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '20px 0',
-        }}
+      <Stack
+        direction={isSmallScreen ? 'row' : 'row'}
+        alignItems="center"
+        justifyContent="center"
+        margin="20px 0"
       >
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            margin: isSmallScreen
+              ? '10px 0'
+              : isTabletScreen
+              ? '10px 0'
+              : '0 50px',
           }}
         >
-          <Box className="Chair booked">X</Box>Đã đặt
+          <Box className="Chair booked">X</Box>
+          Đã đặt
         </Box>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            margin: '0 50px',
             alignItems: 'center',
+            margin: isSmallScreen
+              ? '10px 0'
+              : isTabletScreen
+              ? '10px 0'
+              : '0 50px',
           }}
         >
-          <Box className="Chair regularChair"></Box>Thường{' '}
+          <Box className="Chair regularChair"></Box>
+          Thường{' '}
         </Box>
-
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            margin: isSmallScreen
+              ? '10px 0'
+              : isTabletScreen
+              ? '10px 0'
+              : '0 50px',
           }}
         >
-          <Box className="Chair vipChair"></Box>Vip{' '}
+          <Box className="Chair vipChair"></Box>
+          Vip{' '}
         </Box>
-      </Box>
+      </Stack>
     </Box>
   )
 }

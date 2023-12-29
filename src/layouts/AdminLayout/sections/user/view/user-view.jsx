@@ -38,7 +38,7 @@ export default function UserPage() {
   const [orderBy, setOrderBy] = useState('taiKhoan')
 
   const [filterName, setFilterName] = useState('')
-
+  const [prevPage, setPrevPage] = useState(null)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
   const [open, setOpen] = useState(false)
@@ -78,15 +78,15 @@ export default function UserPage() {
     }
     setSelected(newSelected)
   }
-  const handleChangePage = (event, newPage) => {
-    console.log('newPage: ', newPage)
 
+  const handleChangePage = (event, newPage) => {
     setPage(newPage + 1)
     queryClient.invalidateQueries('get-user-pagination')
   }
 
   const handleChangeRowsPerPage = async (event) => {
     setPage(0)
+    setPrevPage(page)
     setRowsPerPage(parseInt(event.target.value, 10))
   }
 
@@ -117,8 +117,6 @@ export default function UserPage() {
     filterName,
   })
 
-  const notFound = !data?.items.length && !!filterName
-
   return (
     <Container>
       <Stack
@@ -145,51 +143,47 @@ export default function UserPage() {
           filterName={filterName}
           onFilterName={handleFilterByName}
         />
-
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={data?.items.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'taiKhoan', label: 'Tài khoản' },
-                  { id: 'hoTen', label: 'Họ tên' },
-                  { id: 'email', label: 'Email' },
-                  { id: 'soDT', label: 'Số điện thoại' },
-                  { id: 'maLoaiNguoiDung', label: 'Loại người dùng' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataUser
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user, index) => (
-                    <UserTableRow
-                      key={index}
-                      taiKhoan={user.taiKhoan}
-                      hoTen={user.hoTen}
-                      email={user.email}
-                      soDT={user.soDT}
-                      matKhau={user.matKhau}
-                      maLoaiNguoiDung={user.maLoaiNguoiDung}
-                      selected={selected.indexOf(user.taiKhoan) !== -1}
-                      handleClick={(event) => handleClick(event, user.taiKhoan)}
-                    />
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+            
+        <TableContainer sx={{ overflow: 'unset' }}>
+          <Table sx={{ minWidth: 800 }}>
+            <UserTableHead
+              order={order}
+              orderBy={orderBy}
+              rowCount={data?.items.length}
+              numSelected={selected.length}
+              onRequestSort={handleSort}
+              onSelectAllClick={handleSelectAllClick}
+              headLabel={[
+                { id: 'taiKhoan', label: 'Tài khoản' },
+                { id: 'hoTen', label: 'Họ tên' },
+                { id: 'email', label: 'Email' },
+                { id: 'soDT', label: 'Số điện thoại' },
+                { id: 'maLoaiNguoiDung', label: 'Loại người dùng' },
+                { id: '' },
+              ]}
+            />
+            <TableBody>
+              {dataUser?.map((user, index) => (
+                <UserTableRow
+                  key={index}
+                  taiKhoan={user.taiKhoan}
+                  hoTen={user.hoTen}
+                  email={user.email}
+                  soDT={user.soDT}
+                  matKhau={user.matKhau}
+                  maLoaiNguoiDung={user.maLoaiNguoiDung}
+                  selected={selected.indexOf(user.taiKhoan) !== -1}
+                  handleClick={(event) => handleClick(event, user.taiKhoan)}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
         <TablePagination
-          page={page}
+          page={page || 0}
           component="div"
-          count={userList?.length}
+          count={userList?.length || 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 20, 50]}
