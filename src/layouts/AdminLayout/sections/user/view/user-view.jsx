@@ -144,7 +144,7 @@ export default function UserPage() {
           onFilterName={handleFilterByName}
         />
             
-        <TableContainer sx={{ overflow: 'unset' }}>
+        <TableContainer sx={{ overflow: 'scrollbar' }}>
           <Table sx={{ minWidth: 800 }}>
             <UserTableHead
               order={order}
