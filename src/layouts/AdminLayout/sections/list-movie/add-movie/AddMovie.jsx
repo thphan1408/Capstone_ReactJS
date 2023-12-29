@@ -101,8 +101,7 @@ const AddMovie = ({ handleClose }) => {
         formData.append('file', values.hinhAnh[0], values.hinhAnh.name)
       }
     }
-    console.log('🚀  formData:', formData)
-    // handleAddMovie(formData)
+    handleAddMovie(formData)
   }
 
   const previewImage = (file) => {
