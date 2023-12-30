@@ -147,6 +147,7 @@ export default function UserPage() {
           filterName={filterName}
           onFilterName={handleFilterByName}
         />
+<<<<<<< HEAD
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
@@ -187,6 +188,44 @@ export default function UserPage() {
             </Table>
           </TableContainer>
         </Scrollbar>
+=======
+            
+        <TableContainer sx={{ overflow: 'unset' }}>
+          <Table sx={{ minWidth: 800 }}>
+            <UserTableHead
+              order={order}
+              orderBy={orderBy}
+              rowCount={data?.items.length}
+              numSelected={selected.length}
+              onRequestSort={handleSort}
+              onSelectAllClick={handleSelectAllClick}
+              headLabel={[
+                { id: 'taiKhoan', label: 'Tài khoản' },
+                { id: 'hoTen', label: 'Họ tên' },
+                { id: 'email', label: 'Email' },
+                { id: 'soDT', label: 'Số điện thoại' },
+                { id: 'maLoaiNguoiDung', label: 'Loại người dùng' },
+                { id: '' },
+              ]}
+            />
+            <TableBody>
+              {dataUser?.map((user, index) => (
+                <UserTableRow
+                  key={index}
+                  taiKhoan={user.taiKhoan}
+                  hoTen={user.hoTen}
+                  email={user.email}
+                  soDT={user.soDT}
+                  matKhau={user.matKhau}
+                  maLoaiNguoiDung={user.maLoaiNguoiDung}
+                  selected={selected.indexOf(user.taiKhoan) !== -1}
+                  handleClick={(event) => handleClick(event, user.taiKhoan)}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+>>>>>>> parent of 694eb7c (Update user-view.jsx)
 
         <TablePagination
           page={page || 0}
