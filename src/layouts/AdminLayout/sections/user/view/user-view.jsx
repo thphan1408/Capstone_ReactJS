@@ -38,7 +38,7 @@ export default function UserPage() {
   const [orderBy, setOrderBy] = useState('taiKhoan')
 
   const [filterName, setFilterName] = useState('')
-
+  const [prevPage, setPrevPage] = useState(null)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [userRow, setUserRow] = useState([])
   console.log('userRow: ', userRow)
@@ -80,12 +80,20 @@ export default function UserPage() {
     }
     setSelected(newSelected)
   }
+<<<<<<< HEAD
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
+=======
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage + 1)
+    queryClient.invalidateQueries('get-user-pagination')
+>>>>>>> 694eb7c6121b552b40a5539d516e7cd5e72903c6
   }
 
   const handleChangeRowsPerPage = async (event) => {
     setPage(0)
+    setPrevPage(page)
     setRowsPerPage(parseInt(event.target.value, 10))
   }
 
@@ -119,8 +127,6 @@ export default function UserPage() {
     filterName,
   })
   console.log('filterName: ', filterName)
-
-  const notFound = !data?.items.length && !!filterName
 
   return (
     <Container>
@@ -190,9 +196,9 @@ export default function UserPage() {
         </Scrollbar>
 
         <TablePagination
-          page={page}
+          page={page || 0}
           component="div"
-          count={userList?.length}
+          count={userList?.length || 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 20, 50]}

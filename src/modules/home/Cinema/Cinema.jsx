@@ -9,6 +9,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { getListMovieAPI } from '../../../apis/movieAPI'
@@ -17,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import dayjs from 'dayjs'
 import Swal from 'sweetalert2'
+import { useTheme } from '@emotion/react'
 
 const Cinema = () => {
   const navigate = useNavigate()
@@ -78,6 +80,10 @@ const Cinema = () => {
     }
   }
 
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const isTabletScreen = useMediaQuery(theme.breakpoints.down('md'))
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ m: 3 }} component={'div'}>
@@ -86,26 +92,28 @@ const Cinema = () => {
             event.preventDefault()
           }}
         >
-          <Stack direction={'row'} spacing={1}>
+          <Stack
+            direction={isSmallScreen || isTabletScreen ? 'column' : 'row'}
+            spacing={1}
+          >
             <TextField
               select
               id="phim"
               fullWidth
               label="Phim"
+              sx={{ minWidth: 200, mb: isTabletScreen ? 1 : 0 }}
             >
-              {listMovie?.map((phim) => {
-                return (
-                  <MenuItem
-                    key={phim.maPhim}
-                    value={phim.tenPhim}
-                    onClick={() => {
-                      handleChangeMovie(phim.maPhim)
-                    }}
-                  >
-                    {phim.tenPhim}
-                  </MenuItem>
-                )
-              })}
+              {listMovie?.map((phim) => (
+                <MenuItem
+                  key={phim.maPhim}
+                  value={phim.tenPhim}
+                  onClick={() => {
+                    handleChangeMovie(phim.maPhim)
+                  }}
+                >
+                  {phim.tenPhim}
+                </MenuItem>
+              ))}
             </TextField>
 
             <TextField
@@ -113,6 +121,7 @@ const Cinema = () => {
               select
               fullWidth
               label="Rạp"
+              sx={{ minWidth: 200, mb: isTabletScreen ? 1 : 0 }}
             >
               {cinemaSystems?.map((item) => {
                 return item.cumRapChieu?.map((rap) => {
@@ -137,6 +146,7 @@ const Cinema = () => {
               fullWidth
               select
               label="Ngày giờ chiếu"
+              sx={{ minWidth: 200, mb: isTabletScreen ? 1 : 0 }}
             >
               {cinemaSystems.map((item) => {
                 return item.cumRapChieu.map((rap) => {
@@ -162,12 +172,14 @@ const Cinema = () => {
                 })
               })}
             </TextField>
+
             <Button
               type="submit"
               variant="contained"
               fullWidth
               size="large"
               onClick={handleMuaVe}
+              sx={{ minWidth: 200 }}
             >
               Mua vé ngay
             </Button>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Rating from '@mui/material/Rating'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
   Box,
@@ -35,6 +37,14 @@ const VisuallyHiddenInput = styled('input')({
   left: 0,
   whiteSpace: 'nowrap',
   width: 1,
+})
+
+const schemaUpdateMovie = yup.object({
+  tenPhim: yup.string().required('Vui lòng nhập thông tin'),
+  trailer: yup.string().required('Vui lòng nhập thông tin'),
+  moTa: yup.string().required('Vui lòng nhập thông tin'),
+  danhGia: yup.number().required('Vui lòng chọn đánh giá'),
+  hinhAnh: yup.mixed().required('Vui lòng chọn hình ảnh'),
 })
 
 const UpdateMovie = ({ maPhim, handleClose }) => {
@@ -74,7 +84,14 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
     // false | true, khi enabled là true thì queryFun mới được kích hoạt. Ngược lại là false thì sẽ không kích hoạt queryFun
   })
 
-  const { handleSubmit, register, control, setValue, watch } = useForm({
+  const {
+    handleSubmit,
+    register,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       tenPhim: data.tenPhim || '',
       trailer: data.trailer || '',
@@ -87,6 +104,8 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
       hot: data.hot || '',
       hinhAnh: data.hinhAnh || undefined,
     },
+    mode: 'all',
+    resolver: yupResolver(schemaUpdateMovie),
   })
 
   useEffect(() => {
@@ -144,23 +163,35 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box>
-        <Grid
-          container
-          justifyContent={'center'}
-          alignItems={'center'}
-          spacing={3}
-        >
-          <Grid item md={6}>
-            <form onSubmit={handleSubmit(onSubmitUpdate)}>
-              <Stack spacing={2} direction={'column'}>
+      <Box sx={{ overflowY: 'auto', maxHeight: '80vh' }}>
+        <Grid container justifyContent={'center'}>
+          <Grid item xs={12} md={8}>
+            <form
+              onSubmit={handleSubmit(onSubmitUpdate)}
+              style={{ marginTop: 10 }}
+            >
+              <Stack spacing={2}>
                 <TextField
                   label="Tên phim"
                   fullWidth
+                  error={Boolean(errors?.tenPhim)}
+                  helperText={errors?.tenPhim?.message}
                   {...register('tenPhim')}
                 />
-                <TextField label="Trailer" fullWidth {...register('trailer')} />
-                <TextField label="Mô tả" fullWidth {...register('moTa')} />
+                <TextField
+                  label="Trailer"
+                  error={Boolean(errors?.trailer)}
+                  helperText={errors?.trailer?.message}
+                  fullWidth
+                  {...register('trailer')}
+                />
+                <TextField
+                  label="Mô tả"
+                  error={Boolean(errors?.moTa)}
+                  helperText={errors?.moTa?.message}
+                  fullWidth
+                  {...register('moTa')}
+                />
                 <Controller
                   control={control}
                   name="ngayKhoiChieu"
@@ -266,6 +297,8 @@ const UpdateMovie = ({ maPhim, handleClose }) => {
                     <VisuallyHiddenInput
                       accept=".png, .gif, .jpg"
                       type="file"
+                      error={Boolean(errors?.hinhAnh)}
+                      helperText={errors?.hinhAnh?.message}
                       {...register('hinhAnh')}
                       onChange={handleChange}
                     />

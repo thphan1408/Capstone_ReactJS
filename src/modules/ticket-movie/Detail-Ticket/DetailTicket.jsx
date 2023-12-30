@@ -115,7 +115,9 @@ const DetailTicket = (props) => {
             <TableRow>
               <TableCell sx={{ fontSize: 18 }}>Ngày giờ chiếu:</TableCell>
               <TableCell sx={{ fontSize: 18 }}>
-                {detailMovie?.ngayChieu + ' - ' + detailMovie?.gioChieu}
+                {(detailMovie?.ngayChieu || 0) +
+                  ' - ' +
+                  (detailMovie?.gioChieu || 0)}
               </TableCell>
             </TableRow>
             <TableRow>

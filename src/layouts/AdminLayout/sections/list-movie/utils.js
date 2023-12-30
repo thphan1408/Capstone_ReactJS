@@ -11,7 +11,7 @@ export const visuallyHidden = {
 }
 
 export function applyFilter({ inputData, comparator, filterName }) {
-  console.log('inputData: ', inputData);
+  console.log('inputData: ', inputData)
   // const stabilizedThis = inputData?.map((el, index) => [el, index])
 
   // stabilizedThis?.sort((a, b) => {
@@ -22,12 +22,12 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   // inputData = stabilizedThis?.map((el) => el[0])
 
-  // if (filterName) {
-  //   inputData = inputData.filter(
-  //     (user) =>
-  //       user.hoTen.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //   )
-  // }
+  if (filterName) {
+    inputData = inputData.filter(
+      (user) =>
+        user.tenPhim.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    )
+  }
 
   // return inputData
 }
