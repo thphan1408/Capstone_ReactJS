@@ -80,15 +80,8 @@ export default function UserPage() {
     }
     setSelected(newSelected)
   }
-<<<<<<< HEAD
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
-=======
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1)
-    queryClient.invalidateQueries('get-user-pagination')
->>>>>>> 694eb7c6121b552b40a5539d516e7cd5e72903c6
   }
 
   const handleChangeRowsPerPage = async (event) => {
