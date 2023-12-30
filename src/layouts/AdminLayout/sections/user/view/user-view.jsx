@@ -40,6 +40,8 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('')
 
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [userRow, setUserRow] = useState([])
+  console.log('userRow: ', userRow)
 
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -79,10 +81,7 @@ export default function UserPage() {
     setSelected(newSelected)
   }
   const handleChangePage = (event, newPage) => {
-    console.log('newPage: ', newPage)
-
-    setPage(newPage + 1)
-    queryClient.invalidateQueries('get-user-pagination')
+    setPage(newPage)
   }
 
   const handleChangeRowsPerPage = async (event) => {
@@ -91,17 +90,20 @@ export default function UserPage() {
   }
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['get-user-pagination', page, rowsPerPage],
-
-    queryFn: () => {
-      console.log('abchaduahdu')
-      console.log('rowsPerPage: ', rowsPerPage)
-      console.log('page: ', page)
-      return getListUserPagination(page, rowsPerPage)
-    },
+    queryKey: ['get-user-pagination', filterName, page, rowsPerPage],
+    queryFn: () => getListUserPagination(filterName, page, rowsPerPage),
     enabled: !!rowsPerPage,
   })
+  useEffect(() => {
+    setUserRow(data?.items)
+  }, [data])
 
+  useEffect(
+    (data) => {
+      setUserRow(data?.items)
+    },
+    [page, rowsPerPage]
+  )
   const { data: userList } = useQuery({
     queryKey: ['get-list-user'],
     queryFn: async () => await getListUser(),
@@ -116,6 +118,7 @@ export default function UserPage() {
     comparator: getComparator(order, orderBy),
     filterName,
   })
+  console.log('filterName: ', filterName)
 
   const notFound = !data?.items.length && !!filterName
 
@@ -152,7 +155,7 @@ export default function UserPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={data?.items.length}
+                rowCount={dataUser?.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
