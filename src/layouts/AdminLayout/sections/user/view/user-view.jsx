@@ -40,8 +40,6 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('')
   const [prevPage, setPrevPage] = useState(null)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [userRow, setUserRow] = useState([])
-  console.log('userRow: ', userRow)
 
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -80,8 +78,10 @@ export default function UserPage() {
     }
     setSelected(newSelected)
   }
+
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
+    setPage(newPage + 1)
+    queryClient.invalidateQueries('get-user-pagination')
   }
 
   const handleChangeRowsPerPage = async (event) => {
@@ -91,20 +91,17 @@ export default function UserPage() {
   }
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['get-user-pagination', filterName, page, rowsPerPage],
-    queryFn: () => getListUserPagination(filterName, page, rowsPerPage),
+    queryKey: ['get-user-pagination', page, rowsPerPage],
+
+    queryFn: () => {
+      console.log('abchaduahdu')
+      console.log('rowsPerPage: ', rowsPerPage)
+      console.log('page: ', page)
+      return getListUserPagination(page, rowsPerPage)
+    },
     enabled: !!rowsPerPage,
   })
-  useEffect(() => {
-    setUserRow(data?.items)
-  }, [data])
 
-  useEffect(
-    (data) => {
-      setUserRow(data?.items)
-    },
-    [page, rowsPerPage]
-  )
   const { data: userList } = useQuery({
     queryKey: ['get-list-user'],
     queryFn: async () => await getListUser(),
@@ -119,7 +116,6 @@ export default function UserPage() {
     comparator: getComparator(order, orderBy),
     filterName,
   })
-  console.log('filterName: ', filterName)
 
   return (
     <Container>
@@ -147,50 +143,8 @@ export default function UserPage() {
           filterName={filterName}
           onFilterName={handleFilterByName}
         />
-<<<<<<< HEAD
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={dataUser?.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'taiKhoan', label: 'Tài khoản' },
-                  { id: 'hoTen', label: 'Họ tên' },
-                  { id: 'email', label: 'Email' },
-                  { id: 'soDT', label: 'Số điện thoại' },
-                  { id: 'maLoaiNguoiDung', label: 'Loại người dùng' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataUser
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user, index) => (
-                    <UserTableRow
-                      key={index}
-                      taiKhoan={user.taiKhoan}
-                      hoTen={user.hoTen}
-                      email={user.email}
-                      soDT={user.soDT}
-                      matKhau={user.matKhau}
-                      maLoaiNguoiDung={user.maLoaiNguoiDung}
-                      selected={selected.indexOf(user.taiKhoan) !== -1}
-                      handleClick={(event) => handleClick(event, user.taiKhoan)}
-                    />
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
-=======
-            
-        <TableContainer sx={{ overflow: 'unset' }}>
+        <TableContainer sx={{ overflow: 'scrollbar' }}>
           <Table sx={{ minWidth: 800 }}>
             <UserTableHead
               order={order}
@@ -225,7 +179,6 @@ export default function UserPage() {
             </TableBody>
           </Table>
         </TableContainer>
->>>>>>> parent of 694eb7c (Update user-view.jsx)
 
         <TablePagination
           page={page || 0}
