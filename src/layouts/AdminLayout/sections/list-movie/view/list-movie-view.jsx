@@ -18,7 +18,10 @@ import Iconify from '../../../components/iconify'
 
 import MovieTableHead from '../movie-table-head'
 import MovieTableToolbar from '../movie-table-toolbar'
-import { getListMovieAPI } from '../../../../../apis/movieAPI'
+import {
+  getListMovieAPI,
+  getListMoviePagination,
+} from '../../../../../apis/movieAPI'
 import { applyFilter, getComparator, emptyRows } from '../utils'
 import MovieTableRow from '../movie-table-row'
 import ModalView from '../../modal/modal'
@@ -41,16 +44,6 @@ const ListMovieView = () => {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
-  const {
-    data: ListMovie,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['get-list-movie'],
-    queryFn: getListMovieAPI,
-  })
-
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc'
     if (id !== '') {
@@ -60,7 +53,7 @@ const ListMovieView = () => {
   }
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ListMovie.map((n) => n.maPhim)
+      const newSelecteds = data?.items.map((n) => n.maPhim)
       setSelected(newSelecteds)
       return
     }
@@ -98,9 +91,13 @@ const ListMovieView = () => {
     setPage(0)
     setFilterName(event.target.value)
   }
-
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['get-movie-pagination', filterName, page, rowsPerPage],
+    queryFn: () => getListMoviePagination(filterName, page + 1, rowsPerPage),
+    enabled: !!rowsPerPage,
+  })
   const dataMovie = applyFilter({
-    inputData: ListMovie,
+    inputData: data?.items,
     comparator: getComparator(order, orderBy),
     filterName,
   })
@@ -139,7 +136,7 @@ const ListMovieView = () => {
               <MovieTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={ListMovie?.length}
+                rowCount={rowsPerPage}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -152,26 +149,17 @@ const ListMovieView = () => {
                 ]}
               />
               <TableBody>
-                {dataMovie
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((movie, index) => (
-                    <MovieTableRow
-                      key={index}
-                      maPhim={movie.maPhim}
-                      hinhAnh={movie.hinhAnh}
-                      tenPhim={movie.tenPhim}
-                      moTa={movie.moTa}
-                      selected={selected.indexOf(movie.maPhim) !== -1}
-                      handleClick={(event) => handleClick(event, user.tenPhim)}
-                    />
-                  ))}
-
-                {/* <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, ListMovie?.length)}
-                />
-
-                {notFound && <TableNoData query={filterName} />} */}
+                {dataMovie?.map((movie, index) => (
+                  <MovieTableRow
+                    key={index}
+                    maPhim={movie.maPhim}
+                    hinhAnh={movie.hinhAnh}
+                    tenPhim={movie.tenPhim}
+                    moTa={movie.moTa}
+                    selected={selected.indexOf(movie.maPhim) !== -1}
+                    handleClick={(event) => handleClick(event, user.tenPhim)}
+                  />
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -180,10 +168,10 @@ const ListMovieView = () => {
           <TablePagination
             page={page || 0}
             component="div"
-            count={ListMovie?.length || 0}
+            count={data?.totalCount || 0}
             rowsPerPage={rowsPerPage}
             onPageChange={handleChangePage}
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 20, 50]}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>

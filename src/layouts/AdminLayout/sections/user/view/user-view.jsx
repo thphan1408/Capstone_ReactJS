@@ -53,7 +53,7 @@ export default function UserPage() {
   }
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = data.map((n) => n.taiKhoan)
+      const newSelecteds = data?.items.map((n) => n.taiKhoan)
       setSelected(newSelecteds)
       return
     }

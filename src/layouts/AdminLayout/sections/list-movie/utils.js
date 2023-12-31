@@ -21,11 +21,10 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   inputData = stabilizedThis?.map((el) => el[0])
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (user) =>
-        user.tenPhim.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    )
+  if (filterName.trim() && inputData) {
+    inputData = inputData.filter((movie) => {
+      return movie.tenPhim.toLowerCase().includes(filterName.toLowerCase())
+    })
   }
 
   return inputData

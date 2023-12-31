@@ -18,7 +18,33 @@ export const getListMovieAPI = async () => {
     return response.data.content
   } catch (error) {}
 }
+export const getListMoviePagination = async (
+  tuKhoa,
+  soTrang,
+  soPhanTuTrenTrang
+) => {
+  const response = await fetcher.get(
+    '/QuanLyPhim/LayDanhSachPhimPhanTrang',
+    tuKhoa
+      ? {
+          params: {
+            maNhom: GROUP_CODE,
+            tenPhim: tuKhoa,
+            soTrang,
+            soPhanTuTrenTrang,
+          },
+        }
+      : {
+          params: {
+            maNhom: GROUP_CODE,
+            soTrang,
+            soPhanTuTrenTrang,
+          },
+        }
+  )
 
+  return response.data.content
+}
 export const getMovieDetailsAPI = async (movieID) => {
   try {
     const response = await fetcher.get('/QuanLyPhim/LayThongTinPhim', {
