@@ -11,7 +11,6 @@ const HistoryTicket = () => {
     setInfo(infoUser)
   }, [infoUser])
 
-  console.log('🚀  info:', info)
   return <div>History ticket</div>
 }
 

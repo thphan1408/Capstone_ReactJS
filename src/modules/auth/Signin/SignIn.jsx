@@ -38,9 +38,6 @@ const SignIn = () => {
   const { mutate: handleSignin, isPending } = useMutation({
     mutationFn: (values) => signinAPI(values),
     onSuccess: (values) => {
-      // console.log('🚀  values:', values)
-      // localStorage.setItem(CURRENT_USER, JSON.stringify(values))
-      // values là thông tin user
       handleSigninContext(values)
       if (values.maLoaiNguoiDung === 'KhachHang') {
         navigate(PATH.HOME)

@@ -47,11 +47,10 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   inputData = stabilizedThis?.map((el) => el[0])
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (user) =>
-        user.hoTen.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    )
+  if (filterName && inputData) {
+    inputData = inputData.filter((user) => {
+      return user.hoTen.toLowerCase().includes(filterName.toLowerCase())
+    })
   }
 
   return inputData

@@ -38,7 +38,6 @@ export default function UserPage() {
   const [orderBy, setOrderBy] = useState('taiKhoan')
 
   const [filterName, setFilterName] = useState('')
-  const [prevPage, setPrevPage] = useState(null)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
   const [open, setOpen] = useState(false)
@@ -80,31 +79,18 @@ export default function UserPage() {
   }
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1)
-    queryClient.invalidateQueries('get-user-pagination')
+    setPage(newPage)
   }
 
   const handleChangeRowsPerPage = async (event) => {
     setPage(0)
-    setPrevPage(page)
     setRowsPerPage(parseInt(event.target.value, 10))
   }
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['get-user-pagination', page, rowsPerPage],
-
-    queryFn: () => {
-      console.log('abchaduahdu')
-      console.log('rowsPerPage: ', rowsPerPage)
-      console.log('page: ', page)
-      return getListUserPagination(page, rowsPerPage)
-    },
+    queryKey: ['get-user-pagination', filterName, page, rowsPerPage],
+    queryFn: () => getListUserPagination(filterName, page + 1, rowsPerPage),
     enabled: !!rowsPerPage,
-  })
-
-  const { data: userList } = useQuery({
-    queryKey: ['get-list-user'],
-    queryFn: async () => await getListUser(),
   })
 
   const handleFilterByName = (event) => {
@@ -149,7 +135,7 @@ export default function UserPage() {
             <UserTableHead
               order={order}
               orderBy={orderBy}
-              rowCount={data?.items.length}
+              rowCount={rowsPerPage}
               numSelected={selected.length}
               onRequestSort={handleSort}
               onSelectAllClick={handleSelectAllClick}
@@ -183,7 +169,7 @@ export default function UserPage() {
         <TablePagination
           page={page || 0}
           component="div"
-          count={userList?.length || 0}
+          count={data?.totalCount || 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 20, 50]}

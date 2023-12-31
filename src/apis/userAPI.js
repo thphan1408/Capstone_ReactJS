@@ -21,21 +21,25 @@ export const getListUserPagination = async (
   soTrang,
   soPhanTuTrenTrang
 ) => {
-  console.log('soPhanTuTrenTrang: ', soPhanTuTrenTrang)
-  console.log('soTrang: ', soTrang)
   const response = await fetcher.get(
     '/QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang',
-    {
-      params: {
-        tuKhoa,
-        MaNhom: GROUP_CODE,
-        soTrang: 1,
-        soPhanTuTrenTrang: 5,
-      },
-    }
+    tuKhoa
+      ? {
+          params: {
+            tuKhoa,
+            MaNhom: GROUP_CODE,
+            soTrang,
+            soPhanTuTrenTrang,
+          },
+        }
+      : {
+          params: {
+            MaNhom: GROUP_CODE,
+            soTrang,
+            soPhanTuTrenTrang,
+          },
+        }
   )
-  console.log('response.data.content: ', response.data.content)
-
   return response.data.content
 }
 export const signupAPI = async (payload) => {
